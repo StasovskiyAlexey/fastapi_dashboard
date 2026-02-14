@@ -83,3 +83,4 @@
 **UI/UX**: <br>Tailwind CSS 4, shadcn/ui, Lucide Icons<br><br>
 **Security**: <br>JWT (OAuth2), Passlib (bcrypt), ECDSA<br><br>
 **DevOps**:	<br>Docker, Docker Compose, Nginx
+
