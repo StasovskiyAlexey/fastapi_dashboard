@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Request, Response
+from fastapi import APIRouter, Depends, File, Form, Response, UploadFile
 
 from ..core.exceptions import AppError
 from ..services.user import UserService
@@ -6,6 +6,7 @@ from ..dependencies.user import get_current_user, get_user_service
 from ..models.user import User
 from ..schemas.response import SuccessResponse
 from ..schemas.user import UserCreate, UserLogin, UserPasswordRequest, UserResponse, UserUpdate, UsersListResponse
+import os
 
 router = APIRouter(prefix='/users', tags=['Users'])
 
@@ -33,7 +34,7 @@ async def get_user(user_id: int, service: UserService = Depends(get_user_service
   )
 
 @router.post('/register', response_model=SuccessResponse[UserResponse])
-async def register_user(user_data: UserCreate, response: Response, service: UserService = Depends(get_user_service)):
+async def register_user(response: Response, user_data: UserCreate, service: UserService = Depends(get_user_service)):
   new_user, token = await service.create_user(user_data)
   
   print('token', token)
@@ -85,8 +86,8 @@ async def logout(response: Response, current_user = Depends(get_current_user)):
   )
 
 @router.patch('/update_user', response_model=SuccessResponse[UserResponse])
-async def update_user(user_data: UserUpdate, service: UserService = Depends(get_user_service), current_user: User = Depends(get_current_user)):
-  updated_user = await service.update_user(user_data, current_user)
+async def update_user(user_data = Depends(UserUpdate.as_form), service: UserService = Depends(get_user_service), current_user: User = Depends(get_current_user), avatar_url: UploadFile | None = File(None)):
+  updated_user = await service.update_user(user_data, current_user, avatar_url)
   return SuccessResponse(
     message='Користувач успішно оновлен',
     data=updated_user
@@ -100,9 +101,10 @@ async def update_user_password(data: UserPasswordRequest, service: UserService =
     data=updated_user
   )
   
+# user: User = Depends(get_current_user)
 @router.delete('/delete_user', response_model=SuccessResponse[UserResponse])
-async def delete_user(response: Response, service: UserService = Depends(get_user_service), user: User = Depends(get_current_user)):
-  deleted_user = await service.delete_user(user.id)
+async def delete_user(response: Response, user_id: int, service: UserService = Depends(get_user_service)):
+  deleted_user = await service.delete_user(user_id)
   
   response.delete_cookie(
     key='access_token',
@@ -116,3 +118,47 @@ async def delete_user(response: Response, service: UserService = Depends(get_use
     message='Аккаунт успішно видалено',
     data=deleted_user
   )
+  
+@router.patch('/update_user_avatar', response_model=SuccessResponse[UserResponse])
+async def update_user_avatar(avatar_url: UploadFile = File(...), service: UserService = Depends(get_user_service), user = Depends(get_current_user)):
+  new_user = await service.update_user_avatar(user.id, avatar_url)
+  return SuccessResponse(
+    message='Аватар успішно оновлено',
+    data=new_user
+  )
+  
+@router.post('/test_upload_file',)
+async def upload_avatar(file: UploadFile = File(...)):
+  content = await file.read()
+  # Определяем папку (убедись, что она создана)
+  folder = "images"
+  print('file', file)
+  
+  try:
+    # Проверка файла на количество мегабайт
+    if len(content) > 5 * 1024 * 1024:
+      raise AppError(400, 'Файл не повинен бути більше 5 мегабайтів')
+    
+    if not file.filename:
+      raise AppError(status_code=400, message='Файл не завантажено')
+    
+    # Создаем путь к файлу
+    file_path = os.path.join(folder, file.filename)
+    print('path', file_path)
+    
+    if os.path.exists(file_path):
+      raise AppError(status_code=400, message='Такой файл уже есть')
+    
+    # Создаем соеденение с with, он закроет и откроет соеденение сам
+    with open(file_path, "xb") as f:
+      print('file from open', f"{f}") # Логируем для себя
+      f.write(content)
+      
+  except Exception as e:
+    print('e', e)
+    
+    raise AppError(500, str(e))
+  finally:
+    await file.close()
+  
+  return {"status": "ok", "path": file_path}

@@ -1,5 +1,5 @@
-import { dashboardService } from '@/services/dashboard.service'
-import type { TUpdateUserEmail, TUpdateUserPassword, TUser } from '@/types/user'
+import { userService } from '@/services/user.service'
+import type { TUpdateUser, TUpdateUserPassword, TUser } from '@/types/user'
 import { AxiosError } from 'axios'
 import { toast } from 'sonner'
 import { create } from 'zustand'
@@ -7,7 +7,8 @@ import { create } from 'zustand'
 type TDasboardStore = {
   loading: boolean,
   updateUserPassword: ({password, newPassword}: TUpdateUserPassword) => Promise<TUser | undefined>
-  updateUser: (data: {email?: string, login?: string}) => Promise<TUser | undefined>
+  updateUser: (data: TUpdateUser) => Promise<TUser | undefined>
+  updateUserAvatar: (avatarUrl?: File | null) => Promise<TUser>
   deleteUser: () => Promise<TUser>
 }
 
@@ -16,7 +17,7 @@ const useDashboardStore = create<TDasboardStore>((set) => ({
   updateUserPassword: async ({password, newPassword}) => {
     set({loading: true})
     try {
-      const res = await dashboardService.updateUserPassword({password, newPassword})
+      const res = await userService.updatePassword({password, newPassword})
       toast.success(res.message)
       return res.data
     } catch (e) {
@@ -28,11 +29,28 @@ const useDashboardStore = create<TDasboardStore>((set) => ({
     }
   },
 
-  updateUser: async (data: TUpdateUserEmail) => {
+  updateUser: async (data: TUpdateUser) => {
     set({loading: true})
     try {
-      const res = await dashboardService.updateUser(data)
+      const res = await userService.updateUserData(data)
       toast.success(res.message)
+      console.log(res)
+      return res.data
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        toast.error(e.response?.data.detail)
+      }
+    } finally {
+      set({loading: false})
+    }
+  },
+
+  updateUserAvatar: async (avatarUrl?: File | null) => {
+    set({loading: true})
+    try {
+      const res = await userService.updateUserAvatar(avatarUrl)
+      toast.success(res.message)
+      console.log(res)
       return res.data
     } catch (e) {
       if (e instanceof AxiosError) {
@@ -46,7 +64,7 @@ const useDashboardStore = create<TDasboardStore>((set) => ({
   deleteUser: async () => {
     set({loading: true})
     try {
-      const res = await dashboardService.deleteUserAccount()
+      const res = await userService.deleteAccount()
       toast.success(res.message)
       return res.data
     } catch (e) {

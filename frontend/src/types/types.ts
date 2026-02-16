@@ -174,10 +174,63 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/users/test_upload_file": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Upload Avatar */
+        post: operations["upload_avatar_users_test_upload_file_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** Body_register_user_users_register_post */
+        Body_register_user_users_register_post: {
+            /**
+             * File
+             * Format: binary
+             */
+            file: string;
+            /** Login */
+            login: string;
+            /** Email */
+            email: string;
+            /** Password */
+            password: string;
+        };
+        /** Body_update_user_users_update_user_patch */
+        Body_update_user_users_update_user_patch: {
+            /**
+             * File
+             * Format: binary
+             */
+            file: string;
+            /** Login */
+            login: string;
+            /** Email */
+            email: string;
+            /** Password */
+            password: string;
+        };
+        /** Body_upload_avatar_users_test_upload_file_post */
+        Body_upload_avatar_users_test_upload_file_post: {
+            /**
+             * File
+             * Format: binary
+             */
+            file: string;
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
@@ -217,35 +270,11 @@ export interface components {
             message?: string | null;
             data?: components["schemas"]["UsersListResponse"] | null;
         };
-        /** UserCreate */
-        UserCreate: {
-            /**
-             * Login
-             * @description user name
-             */
-            login: string;
-            /**
-             * Email
-             * @description user email
-             */
-            email: string;
-            /**
-             * Password
-             * @description user password
-             */
-            password: string;
-        };
         /** UserLogin */
         UserLogin: {
-            /**
-             * Login
-             * @description user name
-             */
+            /** Login */
             login: string;
-            /**
-             * Password
-             * @description user password
-             */
+            /** Password */
             password: string;
         };
         /** UserPasswordRequest */
@@ -259,29 +288,12 @@ export interface components {
         UserResponse: {
             /** Id */
             id: number;
-            /**
-             * Login
-             * @description user login
-             */
+            /** Login */
             login: string;
-            /**
-             * Email
-             * @description user email
-             */
+            /** Email */
             email: string;
-        };
-        /** UserUpdate */
-        UserUpdate: {
-            /**
-             * Login
-             * @description user login
-             */
-            login: string;
-            /**
-             * Email
-             * @description user email
-             */
-            email: string;
+            /** Avatar Url */
+            avatar_url: string;
         };
         /** UsersListResponse */
         UsersListResponse: {
@@ -410,7 +422,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UserCreate"];
+                "multipart/form-data": components["schemas"]["Body_register_user_users_register_post"];
             };
         };
         responses: {
@@ -496,7 +508,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UserUpdate"];
+                "multipart/form-data": components["schemas"]["Body_update_user_users_update_user_patch"];
             };
         };
         responses: {
@@ -569,6 +581,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SuccessResponse_UserResponse_"];
+                };
+            };
+        };
+    };
+    upload_avatar_users_test_upload_file_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_upload_avatar_users_test_upload_file_post"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

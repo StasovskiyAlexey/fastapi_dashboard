@@ -7,9 +7,10 @@ export type TUpdateUserPassword = {
   newPassword?: string
 }
 
-export type TUpdateUserEmail = {
-  login?: string
-  email?: string
+export type TUpdateUser = {
+  login: string
+  email: string
+  avatarUrl: File | null | undefined
 }
 
 export type TUserRegister = Pick<NonNullable<TUser>, 'login' | 'email'> & {
