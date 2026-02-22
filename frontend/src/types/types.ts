@@ -174,6 +174,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/users/update_user_avatar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update User Avatar */
+        patch: operations["update_user_avatar_users_update_user_avatar_patch"];
+        trace?: never;
+    };
     "/users/test_upload_file": {
         parameters: {
             query?: never;
@@ -191,37 +208,256 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/kanban/get_boards": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Boards */
+        get: operations["get_boards_kanban_get_boards_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/kanban/get_board_by_id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Get Board By Id */
+        post: operations["get_board_by_id_kanban_get_board_by_id_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/kanban/create_board": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Board */
+        post: operations["create_board_kanban_create_board_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/kanban/update_board": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update Board */
+        patch: operations["update_board_kanban_update_board_patch"];
+        trace?: never;
+    };
+    "/kanban/get_columns": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Columns */
+        get: operations["get_columns_kanban_get_columns_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/kanban/get_column_by_id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Get Column */
+        post: operations["get_column_kanban_get_column_by_id_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/kanban/create_column": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Column */
+        post: operations["create_column_kanban_create_column_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/kanban/update_column": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update Column */
+        patch: operations["update_column_kanban_update_column_patch"];
+        trace?: never;
+    };
+    "/kanban/get_cards": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Cards */
+        get: operations["get_cards_kanban_get_cards_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/kanban/get_card_by_id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Get Card */
+        post: operations["get_card_kanban_get_card_by_id_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/kanban/create_card": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Card */
+        post: operations["create_card_kanban_create_card_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/kanban/update_card": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update Card */
+        patch: operations["update_card_kanban_update_card_patch"];
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        /** Body_register_user_users_register_post */
-        Body_register_user_users_register_post: {
+        /** BoardCreate */
+        BoardCreate: {
+            /** Title */
+            title: string;
+        };
+        /** BoardResponse */
+        BoardResponse: {
+            /** Title */
+            title: string;
+            /** Id */
+            id: number;
+            /** Owner Id */
+            owner_id: number;
+            /** Columns */
+            columns: components["schemas"]["ColumnResponse"][];
             /**
-             * File
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
+        /** BoardUpdate */
+        BoardUpdate: {
+            /** Title */
+            title: string;
+        };
+        /** Body_update_user_avatar_users_update_user_avatar_patch */
+        Body_update_user_avatar_users_update_user_avatar_patch: {
+            /**
+             * Avatar Url
              * Format: binary
              */
-            file: string;
-            /** Login */
-            login: string;
-            /** Email */
-            email: string;
-            /** Password */
-            password: string;
+            avatar_url: string;
         };
         /** Body_update_user_users_update_user_patch */
         Body_update_user_users_update_user_patch: {
-            /**
-             * File
-             * Format: binary
-             */
-            file: string;
+            /** Avatar Url */
+            avatar_url?: string | null;
             /** Login */
             login: string;
             /** Email */
             email: string;
-            /** Password */
-            password: string;
         };
         /** Body_upload_avatar_users_test_upload_file_post */
         Body_upload_avatar_users_test_upload_file_post: {
@@ -230,6 +466,88 @@ export interface components {
              * Format: binary
              */
             file: string;
+        };
+        /** CardCreate */
+        CardCreate: {
+            /** Title */
+            title: string;
+            /** Description */
+            description: string;
+            /** Order */
+            order: number;
+        };
+        /** CardListResponse */
+        CardListResponse: {
+            /** Cards */
+            cards: components["schemas"]["CardResponse"][];
+        };
+        /** CardResponse */
+        CardResponse: {
+            /** Id */
+            id: number;
+            /** Title */
+            title: string;
+            /** Description */
+            description: string;
+            /** Order */
+            order: number;
+            /** Creator Id */
+            creator_id: number;
+            /** Column Id */
+            column_id: number;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
+        /** CardUpdate */
+        CardUpdate: {
+            /** Title */
+            title: string;
+            /** Description */
+            description: string;
+            /** Order */
+            order: number;
+        };
+        /** ColumnCreate */
+        ColumnCreate: {
+            /** Title */
+            title: string;
+            /** Board Id */
+            board_id: number;
+            /** Order */
+            order: number;
+        };
+        /** ColumnListResponse */
+        ColumnListResponse: {
+            /** Columns */
+            columns: components["schemas"]["ColumnResponse"][];
+        };
+        /** ColumnResponse */
+        ColumnResponse: {
+            /** Id */
+            id: number;
+            /** Title */
+            title: string;
+            /** Board Id */
+            board_id: number;
+            /** Order */
+            order: number;
+            /** Cards */
+            cards: components["schemas"]["CardResponse"][];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
+        /** ColumnUpdate */
+        ColumnUpdate: {
+            /** Title */
+            title: string;
+            /** Order */
+            order: number;
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -247,6 +565,61 @@ export interface components {
             message?: string | null;
             /** Data */
             data?: unknown | null;
+        };
+        /** SuccessResponse[BoardResponse] */
+        SuccessResponse_BoardResponse_: {
+            /**
+             * Status
+             * @default 200
+             */
+            status: number;
+            /** Message */
+            message?: string | null;
+            data?: components["schemas"]["BoardResponse"] | null;
+        };
+        /** SuccessResponse[CardListResponse] */
+        SuccessResponse_CardListResponse_: {
+            /**
+             * Status
+             * @default 200
+             */
+            status: number;
+            /** Message */
+            message?: string | null;
+            data?: components["schemas"]["CardListResponse"] | null;
+        };
+        /** SuccessResponse[CardResponse] */
+        SuccessResponse_CardResponse_: {
+            /**
+             * Status
+             * @default 200
+             */
+            status: number;
+            /** Message */
+            message?: string | null;
+            data?: components["schemas"]["CardResponse"] | null;
+        };
+        /** SuccessResponse[ColumnListResponse] */
+        SuccessResponse_ColumnListResponse_: {
+            /**
+             * Status
+             * @default 200
+             */
+            status: number;
+            /** Message */
+            message?: string | null;
+            data?: components["schemas"]["ColumnListResponse"] | null;
+        };
+        /** SuccessResponse[ColumnResponse] */
+        SuccessResponse_ColumnResponse_: {
+            /**
+             * Status
+             * @default 200
+             */
+            status: number;
+            /** Message */
+            message?: string | null;
+            data?: components["schemas"]["ColumnResponse"] | null;
         };
         /** SuccessResponse[UserResponse] */
         SuccessResponse_UserResponse_: {
@@ -269,6 +642,27 @@ export interface components {
             /** Message */
             message?: string | null;
             data?: components["schemas"]["UsersListResponse"] | null;
+        };
+        /** SuccessResponse[list[BoardResponse]] */
+        SuccessResponse_list_BoardResponse__: {
+            /**
+             * Status
+             * @default 200
+             */
+            status: number;
+            /** Message */
+            message?: string | null;
+            /** Data */
+            data?: components["schemas"]["BoardResponse"][] | null;
+        };
+        /** UserCreate */
+        UserCreate: {
+            /** Login */
+            login: string;
+            /** Email */
+            email: string;
+            /** Password */
+            password: string;
         };
         /** UserLogin */
         UserLogin: {
@@ -293,7 +687,7 @@ export interface components {
             /** Email */
             email: string;
             /** Avatar Url */
-            avatar_url: string;
+            avatar_url?: string | null;
         };
         /** UsersListResponse */
         UsersListResponse: {
@@ -422,7 +816,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "multipart/form-data": components["schemas"]["Body_register_user_users_register_post"];
+                "application/json": components["schemas"]["UserCreate"];
             };
         };
         responses: {
@@ -567,7 +961,9 @@ export interface operations {
     };
     delete_user_users_delete_user_delete: {
         parameters: {
-            query?: never;
+            query: {
+                user_id: number;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -581,6 +977,48 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SuccessResponse_UserResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_user_avatar_users_update_user_avatar_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_update_user_avatar_users_update_user_avatar_patch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_UserResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -605,6 +1043,391 @@ export interface operations {
                 };
                 content: {
                     "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_boards_kanban_get_boards_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_list_BoardResponse__"];
+                };
+            };
+        };
+    };
+    get_board_by_id_kanban_get_board_by_id_post: {
+        parameters: {
+            query: {
+                board_id: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_BoardResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_board_kanban_create_board_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BoardCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_BoardResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_board_kanban_update_board_patch: {
+        parameters: {
+            query: {
+                board_id: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BoardUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_BoardResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_columns_kanban_get_columns_get: {
+        parameters: {
+            query: {
+                board_id: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_ColumnListResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_column_kanban_get_column_by_id_post: {
+        parameters: {
+            query: {
+                board_id: number;
+                column_id: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_ColumnResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_column_kanban_create_column_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ColumnCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_ColumnResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_column_kanban_update_column_patch: {
+        parameters: {
+            query: {
+                board_id: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ColumnUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_ColumnResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_cards_kanban_get_cards_get: {
+        parameters: {
+            query: {
+                board_id: number;
+                column_id: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_CardListResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_card_kanban_get_card_by_id_post: {
+        parameters: {
+            query: {
+                card_id: number;
+                column_id: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_CardResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_card_kanban_create_card_post: {
+        parameters: {
+            query: {
+                column_id: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CardCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_CardResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_card_kanban_update_card_patch: {
+        parameters: {
+            query: {
+                card_id: number;
+                column_id: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CardUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_CardResponse_"];
                 };
             };
             /** @description Validation Error */

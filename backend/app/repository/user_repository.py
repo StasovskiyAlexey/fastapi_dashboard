@@ -68,4 +68,4 @@ class UserRepository:
       return user
     except Exception:
       await self.db.rollback()
-      raise HTTPException(500, 'Помилка при видаленні користувача')
+      raise AppError(500, 'Помилка при видаленні користувача')

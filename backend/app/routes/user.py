@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, File, Form, Response, UploadFile
+from fastapi import APIRouter, Depends, File, Response, UploadFile
 
 from ..core.exceptions import AppError
 from ..services.user import UserService

@@ -1,7 +1,8 @@
 import { 
   Settings, 
   LogOut, 
-  ChevronRight
+  ChevronRight,
+  LayoutDashboard
 } from 'lucide-react';
 import { useAuth } from '@/providers/AuthProvider';
 import { Link } from '@tanstack/react-router';
@@ -10,8 +11,8 @@ export const Sidebar = () => {
   const { logout, user } = useAuth();
 
   const menuItems = [
-    // { icon: User, label: 'Профіль', href: '/' },
     { icon: Settings, label: 'Налаштування', href: '/settings' },
+    { icon: LayoutDashboard, label: 'Дошки', href: '/boards' },
   ];
 
   if (!user) {
@@ -30,7 +31,7 @@ export const Sidebar = () => {
           />
         </div>
         <span className="text-xl font-bold tracking-tight text-slate-800">
-          FastAPI <span className="text-emerald-500">Auth</span>
+          FastAPI <span className="text-emerald-500">Dashboard</span>
         </span>
       </div>
 
