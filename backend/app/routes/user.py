@@ -44,7 +44,7 @@ async def register_user(response: Response, user_data: UserCreate, service: User
     value=token,
     httponly=True,
     secure=False,
-    max_age=3600,
+    max_age=3600 * 24,
     samesite="lax"
   )
 
@@ -62,7 +62,7 @@ async def login_user(user_data: UserLogin, response: Response, service: UserServ
     value=token,
     httponly=True,
     secure=True,
-    max_age=3600,
+    max_age=3600 * 24,
     samesite="lax"
   )
 
@@ -86,12 +86,12 @@ async def logout(response: Response, current_user = Depends(get_current_user)):
   )
 
 @router.patch('/update_user', response_model=SuccessResponse[UserResponse])
-async def update_user(user_data = Depends(UserUpdate.as_form), service: UserService = Depends(get_user_service), current_user: User = Depends(get_current_user), avatar_url: UploadFile | None = File(None)):
-  updated_user = await service.update_user(user_data, current_user, avatar_url)
+async def update_user(user_data = Depends(UserUpdate.as_form), service: UserService = Depends(get_user_service), current_user: User = Depends(get_current_user)):
+  updated_user = await service.update_user(user_data, current_user)
   return SuccessResponse(
     message='Користувач успішно оновлен',
     data=updated_user
-  ) 
+  )
 
 @router.patch('/update_user_password', response_model=SuccessResponse[UserResponse])
 async def update_user_password(data: UserPasswordRequest, service: UserService = Depends(get_user_service), user: User = Depends(get_current_user)):
@@ -101,10 +101,9 @@ async def update_user_password(data: UserPasswordRequest, service: UserService =
     data=updated_user
   )
   
-# user: User = Depends(get_current_user)
 @router.delete('/delete_user', response_model=SuccessResponse[UserResponse])
-async def delete_user(response: Response, user_id: int, service: UserService = Depends(get_user_service)):
-  deleted_user = await service.delete_user(user_id)
+async def delete_user(response: Response, user: User = Depends(get_current_user), service: UserService = Depends(get_user_service)):
+  deleted_user = await service.delete_user(user.id)
   
   response.delete_cookie(
     key='access_token',

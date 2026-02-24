@@ -1,26 +1,25 @@
-// import ConfirmModal from "@/components/modals/ConfrimModal"
 import ScreenLoader from "@/components/ScreenLoader"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { useAuth } from "@/providers/AuthProvider"
-import useDashboardStore from "@/store/dashboard.store"
 import { useNavigate } from "@tanstack/react-router"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useEffect, useState } from "react"
 import { Plus } from "lucide-react"
-import user_img from "@/assets/user_profile.png"
 import { getImageUrl } from "@/lib/utils"
 import UpdateUserAvatarModal from "@/components/modals/UpdateUserAvatarModal"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import useModalStore from "@/store/modal.store"
+import { useUsers } from "@/hooks/queries/useUsers"
+import ConfirmModal from "@/components/modals/ConfirmModal"
 
 function Settings() {
-  const {user, setUser} = useAuth()
-  const dashboardStore = useDashboardStore()
+  const {user, loading} = useAuth()
   const navigate = useNavigate()
 
-  const [openUploadModal, setopenUploadModal] = useState<boolean>(false)
+  const {switcher} = useModalStore()
+  const {updateUserPassword, deleteUser, updateUserData} = useUsers()
 
   const userDefaultObj: {id?: number, login?: string, email?: string, password?: string, newPassword?: string, avatarUrl?: string | null} = {
     id: user?.id,
@@ -31,43 +30,36 @@ function Settings() {
     avatarUrl: user?.avatar_url
   }
   
-  const [imageFile, setImageFile] = useState<File | null | undefined>(null)
   const [userData, setUserData] = useState<{login?: string, email?: string, password?: string, newPassword?: string, avatarUrl?: string | null}>(userDefaultObj)
 
   useEffect(() => {
     setUserData(state => ({...state, email: user?.email, login: user?.login, avatarUrl: user?.avatar_url}))
-    console.log(user)
   }, [user])
   
   const updateUser = async () => {
     if (!userData.login && !userData.email && !userData.avatarUrl) return
-    const res = await dashboardStore.updateUser({
-      login: userData?.login, 
-      email: userData.email, 
-      avatarUrl: imageFile
+    await updateUserData({
+      login: userData?.login,
+      email: userData.email,
+      avatarUrl: userData.avatarUrl
     })
     console.log(userData)
-    // setUserData({login: res?.login, email: res?.email})
-    // setUser((state) => ({...state, id: res!.id, login: res?.login as string, email: res?.email as string, avatar_url: res?.avatar_url as string}))
-    console.log(res)
   }
   
   const updatePassword = async () => {
-    const res = await dashboardStore.updateUserPassword({password: userData.password, newPassword: userData.newPassword})
+    await updateUserPassword({password: userData.password, newPassword: userData.newPassword})
     setUserData(userDefaultObj)
-    return res
   }
 
-  const deleteUser = async () => {
-    const res = await dashboardStore.deleteUser()
+  const deleteUserAccount = async () => {
+    await deleteUser()
     setUserData(userDefaultObj)
     navigate({
       to: '/auth'
     })
-    return res
   }
 
-  if (dashboardStore.loading) {
+  if (loading) {
     return <ScreenLoader/>
   }
 
@@ -88,10 +80,10 @@ function Settings() {
         <div className="space-y-6">
           <div className="relative w-max">
             <div className="absolute -top-2 -right-2 z-10">
-              <Button size='icon' onClick={() => setopenUploadModal(true)} className="rounded-full flex justify-center items-center"><Plus className="text-white" /></Button>
+              <Button size='icon' onClick={() => switcher('isOpenUpdateAvatar', true)} className="rounded-full flex justify-center items-center"><Plus className="text-white" /></Button>
             </div>
             <Avatar className="z-0" size="lg">
-              <AvatarImage src={!user?.avatar_url ? user_img : getImageUrl(user?.avatar_url)} />
+              <AvatarImage src={!user?.avatar_url ? 'https://img.icons8.com/ios-filled/100/user-male-circle.png' : getImageUrl(user?.avatar_url)} />
               <AvatarFallback>ERROR</AvatarFallback>
             </Avatar>
           </div>
@@ -109,7 +101,7 @@ function Settings() {
               <Label htmlFor="email">Email</Label>
               <Input value={userData.email || ''} onChange={(e) => setUserData((state) => ({...state, email: e.target.value}))} id="email" type="email" placeholder="Ваш email" />
             </div>
-            <Button onClick={updateUser} disabled={!userData.login?.length || !userData.email?.length} variant="outline" className="w-fit">Оновити профіль</Button>
+            <Button onClick={() => switcher('isOpenConfirmModal', true, {action: () => updateUser(), confirmLabel: 'Оновити користувача'})} disabled={!userData.login?.length || !userData.email?.length} variant="outline" className="w-fit">Оновити профіль</Button>
           </div>
         </div>
         
@@ -143,12 +135,12 @@ function Settings() {
           </div>
           <div className="space-y-4">
             {/* <Button onClick={() => setOpen({modal: 'deleteUser', trigger: true})} variant="destructive" className="w-fit">Видалити акаунт</Button> */}
-            <Button onClick={deleteUser} variant="destructive" className="w-fit">Видалити акаунт</Button>
+            <Button onClick={deleteUserAccount} variant="destructive" className="w-fit">Видалити акаунт</Button>
           </div>
         </div>
       </div>
-      {/* <ConfirmModal onClose={() => setOpen({modal: 'deleteUser', trigger: false})} onConfirm={deleteUser} isOpen={open.trigger} confirmLabel="Видалити гравця"/> */}
-      <UpdateUserAvatarModal close={() => setopenUploadModal(false)} isOpen={openUploadModal}/>
+      <ConfirmModal/>
+      <UpdateUserAvatarModal/>
     </div>
   )
 }

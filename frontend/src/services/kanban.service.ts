@@ -7,20 +7,28 @@ class KanbanService {
     return await axiosClient.get('/kanban/get_boards')
   }
 
-  async getBoard(boardId: number): Promise<TSuccessResponse<TBoard>> {
-    return await axiosClient.post('/kanban/get_board_by_id', {board_id: boardId })
-  }
-
-  async createBoard(data: TCreateBoard['data']): Promise<TSuccessResponse<TCreateBoard>> {
-    return await axiosClient.post('/kanban/create_board', {title: data?.title})
-  }
-
-  async updateBoard(data: TUpdateBoard['data'], boardId: number): Promise<TSuccessResponse<TUpdateBoard>> {
-    return await axiosClient.post('/kanban/update_board', {title: data?.title}, {
+  async getBoard(boardId?: number): Promise<TSuccessResponse<TBoard>> {
+    return await axiosClient.post('/kanban/get_board_by_id', {}, {
       params: {
         board_id: boardId
       }
     })
+  }
+
+  async createBoard({data}: {data: {title: string}}): Promise<TSuccessResponse<TCreateBoard>> {
+    return await axiosClient.post('/kanban/create_board', {title: data?.title})
+  }
+
+  async updateBoard({data, boardId}: {data: {title: string}, boardId?: number}): Promise<TSuccessResponse<TUpdateBoard>> {
+    return await axiosClient.patch('/kanban/update_board', {title: data?.title}, {
+      params: {
+        board_id: boardId
+      }
+    })
+  }
+
+  async deleteBoard(boardId: number): Promise<TSuccessResponse<TBoard>> {
+    return await axiosClient.delete('/kanban/delete_board', {params: {board_id: boardId}})
   }
 }
 

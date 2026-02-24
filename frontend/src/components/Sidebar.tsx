@@ -6,6 +6,8 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/providers/AuthProvider';
 import { Link } from '@tanstack/react-router';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { getImageUrl } from '@/lib/utils';
 
 export const Sidebar = () => {
   const { logout, user } = useAuth();
@@ -89,6 +91,10 @@ export const Sidebar = () => {
       {/* 3. Нижня частина: Профіль та Вихід */}
       <div className="mt-auto border-t border-slate-100 pt-4">
         <div className="mb-4 flex items-center gap-3 px-2">
+          <Avatar className="z-0" size="default">
+            <AvatarImage src={!user?.avatar_url ? 'https://img.icons8.com/ios-filled/100/user-male-circle.png' : getImageUrl(user?.avatar_url)} />
+            <AvatarFallback>ERROR</AvatarFallback>
+          </Avatar>
           <div className="flex flex-col">
             <span className="text-sm font-semibold text-slate-800 leading-none">{user?.login}</span>
             <span className="text-xs text-slate-500 mt-1">{user?.email}</span>

@@ -61,26 +61,19 @@ class UserService:
     user.avatar_url = file_path
     return await self.repository.update_user(user)
   
-  # Пароль не шифруется при обновлении
-  async def update_user(self, user_data: UserUpdate, user: User, avatar_url: UploadFile | None = File(None)):
+  async def update_user(self, user_data: UserUpdate, user: User):
     updated_data = user_data.model_dump(exclude_unset=True)
-    file_path = await convert_file_to_url(avatar_url, "images")
     
     if not updated_data:
       raise AppError(400, 'Ніяких даних не було оновлено')
     
-    if avatar_url:
-      user.avatar_url = file_path
-
     for key, value in updated_data.items():
       if key == 'password':
         user.password = hash_password(value)
         continue
       
       setattr(user, key, value)
-      
-    print(user)
-    
+
     return await self.repository.update_user(user)
     
   async def update_user_password(self, user: User, password: str, new_password: str):

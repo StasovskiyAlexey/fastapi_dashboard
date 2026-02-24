@@ -9,20 +9,20 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Upload } from "lucide-react"
-import useDashboardStore from '@/store/dashboard.store'
-import { useAuth } from '@/providers/AuthProvider'
 import { Label } from '../ui/label'
+import useModalStore from '@/store/modal.store'
+import { useUsers } from '@/hooks/queries/useUsers'
 
-export default function UpdateUserAvatarModal({isOpen, close}: {isOpen: boolean, close: () => void}) {
+export default function UpdateUserAvatarModal() {
   const [file, setFile] = useState<File | null | undefined>(null)
   const [preview, setPreview] = useState<string | null>(null)
-  const dashboardStore = useDashboardStore()
-  const {setUser} = useAuth()
 
-  const updateUser = async () => {
-    const res = await dashboardStore.updateUserAvatar(file)
-    setUser(res)
-    close()
+  const {updateUserAvatar} = useUsers()
+  const {switcher, modals} = useModalStore()
+
+  const updateAvatar = async () => {
+    await updateUserAvatar({avatarUrl: file})
+    switcher('isOpenUpdateAvatar', false)
   }
 
   // Функция обработки выбора файла
@@ -36,7 +36,7 @@ export default function UpdateUserAvatarModal({isOpen, close}: {isOpen: boolean,
   }
 
   return (
-    <Dialog onOpenChange={close} open={isOpen}>
+    <Dialog onOpenChange={() => switcher('isOpenUpdateAvatar', false)} open={modals.isOpenUpdateAvatar.isOpen}>
       <DialogContent className="max-w-xl w-full">
         <DialogHeader>
           <DialogTitle>Обновить аватар</DialogTitle>
@@ -67,10 +67,10 @@ export default function UpdateUserAvatarModal({isOpen, close}: {isOpen: boolean,
         <DialogFooter>
           <Button 
             type="submit" 
-            onClick={updateUser}
+            onClick={() => updateAvatar()}
             disabled={file === null} 
           >
-            {dashboardStore.loading ? "Загрузка..." : "Сохранить изменения"}
+            Зберегти зміни
           </Button>
 
         </DialogFooter>

@@ -8,9 +8,9 @@ export type TUpdateUserPassword = {
 }
 
 export type TUpdateUser = {
-  login: string
-  email: string
-  avatarUrl: File | null | undefined
+  login?: string
+  email?: string
+  avatarUrl?: string | null | undefined
 }
 
 export type TUserRegister = Pick<NonNullable<TUser>, 'login' | 'email'> & {

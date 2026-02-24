@@ -276,6 +276,23 @@ export interface paths {
         patch: operations["update_board_kanban_update_board_patch"];
         trace?: never;
     };
+    "/kanban/delete_board": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Board */
+        delete: operations["delete_board_kanban_delete_board_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/kanban/get_columns": {
         parameters: {
             query?: never;
@@ -344,6 +361,23 @@ export interface paths {
         patch: operations["update_column_kanban_update_column_patch"];
         trace?: never;
     };
+    "/kanban/delete_column": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Column */
+        delete: operations["delete_column_kanban_delete_column_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/kanban/get_cards": {
         parameters: {
             query?: never;
@@ -410,6 +444,23 @@ export interface paths {
         head?: never;
         /** Update Card */
         patch: operations["update_card_kanban_update_card_patch"];
+        trace?: never;
+    };
+    "/kanban/delete_card": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Card */
+        delete: operations["delete_card_kanban_delete_card_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
 }
@@ -1175,6 +1226,37 @@ export interface operations {
             };
         };
     };
+    delete_board_kanban_delete_board_delete: {
+        parameters: {
+            query: {
+                board_id: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_BoardResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     get_columns_kanban_get_columns_get: {
         parameters: {
             query: {
@@ -1285,6 +1367,38 @@ export interface operations {
                 "application/json": components["schemas"]["ColumnUpdate"];
             };
         };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_ColumnResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_column_kanban_delete_column_delete: {
+        parameters: {
+            query: {
+                board_id: number;
+                column_id: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             /** @description Successful Response */
             200: {
@@ -1420,6 +1534,38 @@ export interface operations {
                 "application/json": components["schemas"]["CardUpdate"];
             };
         };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_CardResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_card_kanban_delete_card_delete: {
+        parameters: {
+            query: {
+                card_id: number;
+                column_id: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             /** @description Successful Response */
             200: {
