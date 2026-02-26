@@ -12,16 +12,15 @@ import useModalStore from "@/store/modal.store"
 
 export default function ConfirmModal() {
   const {modals, switcher} = useModalStore()
-  console.log(modals)
 
   const action = modals.isOpenConfirmModal.data?.action
   const label = modals.isOpenConfirmModal?.data?.confirmLabel
 
   const handleConfirm = () => {
     if (action) {
-      action() // Виконуємо передану дію (наприклад, видалення)
+      action()
     }
-    switcher('isOpenConfirmModal', false) // Примусово закриваємо модалку в сторі
+    switcher('isOpenConfirmModal', false)
   }
 
   return (

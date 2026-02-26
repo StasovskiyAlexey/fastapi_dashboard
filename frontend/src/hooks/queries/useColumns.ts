@@ -67,10 +67,24 @@ export const useColumnMutations = () => {
     }
   });
 
+  const updateOrdersMutation = useMutation({
+    mutationFn: ({boardId, columns}: {boardId: number, columns: {id: number, order: number}[]}) => 
+      kanbanService.update_columns_orders(boardId, columns),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['columns-list', variables.boardId] });
+    },
+    onError: (error) => {
+      if (error instanceof AxiosError) {
+        toast.success(error.response?.data.detail)
+      }
+    }
+  })
+
   return {
     createColumn: createMutation.mutate,
     updateColumn: updateMutation.mutate,
     deleteColumn: deleteMutation.mutate,
+    updateOrdersColumns: updateOrdersMutation.mutate,
     isPending: createMutation.isPending || updateMutation.isPending || deleteMutation.isPending
   };
 };

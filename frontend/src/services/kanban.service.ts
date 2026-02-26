@@ -62,6 +62,14 @@ class KanbanService {
     })
   }
 
+  async update_columns_orders(boardId: number, columnData: {id: number, order: number}[]): Promise<TSuccessResponse<TColumn>> {
+    return await axiosClient.patch('/kanban/update_order_columns', {columns: columnData}, {
+      params: {
+        board_id: boardId
+      }
+    })
+  }
+
   async deleteColumn(boardId: number, columnId: number): Promise<TSuccessResponse<TColumn>> {
     return await axiosClient.delete('/kanban/delete_column', {params: {board_id: boardId, column_id: columnId}})
   }

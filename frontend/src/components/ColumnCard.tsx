@@ -7,20 +7,33 @@ import Card from "./Card";
 import { Button } from "./ui/button";
 import { useCardsList } from "@/hooks/queries/useCards";
 
+import {
+  useSortable
+}  from '@dnd-kit/sortable'
+import { CSS } from "@dnd-kit/utilities";
+
 export default function ColumnCard({column, boardId, columnId}: {column: TColumn, boardId: number, columnId: number}) {
   const {deleteColumn} = useColumnMutations()
   const {switcher} = useModalStore()
   const {data: cards} = useCardsList(boardId, columnId)
+
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({id: columnId})
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    height: 'max-content',
+    maxHeight: '100%',
+    transition,
+  };
   
   return (
-    <div className="w-80 shrink-0 flex flex-col bg-slate-100 rounded-xl max-h-full border border-slate-200 shadow-sm">
+    <div ref={setNodeRef} style={style} className="w-80 shrink-0 flex flex-col bg-slate-100 rounded-xl max-h-full border border-slate-200 shadow-sm">
       <div className="p-4 flex justify-between items-center group">
         <div className="flex items-center gap-2">
-          <GripVertical className="text-slate-400 opacity-0 group-hover:opacity-100 cursor-grab transition-opacity" size={16} />
+          <div {...attributes} {...listeners} >
+            <GripVertical className="text-slate-400 opacity-0 group-hover:opacity-100 cursor-grab transition-opacity" size={16} />
+          </div>
           <h2 className="font-semibold text-slate-700">{column?.title}</h2>
-          <span className="bg-slate-200 text-slate-600 text-xs px-2 py-0.5 rounded-full">
-            {cards?.length}
-          </span>
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -38,6 +51,7 @@ export default function ColumnCard({column, boardId, columnId}: {column: TColumn
       </div>
 
       <div className="flex-1 overflow-y-auto px-3 pb-3 space-y-3">
+        {!cards?.length && 'Додайте картку...'}
         {cards && cards?.map((card) => (
           <Card key={card?.id} card={card} columnId={columnId}/>
         ))}

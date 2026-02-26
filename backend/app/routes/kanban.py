@@ -4,7 +4,7 @@ from ..dependencies.user import get_current_user
 from ..services.kanban import KanbanService
 from ..dependencies.kanban import get_kanban_service
 from ..schemas.response import SuccessResponse
-from ..schemas.kanban import BoardCreate, BoardResponse, BoardUpdate, ColumnListResponse, ColumnResponse, ColumnCreate, ColumnUpdate, CardListResponse, CardResponse, CardCreate, CardUpdate
+from ..schemas.kanban import BoardCreate, BoardResponse, BoardUpdate, ColumnResponse, ColumnCreate, ColumnUpdate, ColumnOrdersUpdateList, CardResponse, CardCreate, CardUpdate, ColumnOrderUpdate
 
 router = APIRouter(prefix='/kanban', tags=['Kanban'])
 
@@ -76,6 +76,14 @@ async def update_column(column_id: int, board_id: int, column_data: ColumnUpdate
   return SuccessResponse(
     message='Колонка успішно оновлена',
     data=new_column
+  )
+  
+@router.patch('/update_order_columns', response_model=SuccessResponse[list[ColumnOrderUpdate]])
+async def update_order_columns(board_id: int, column_data: ColumnOrdersUpdateList, service: KanbanService = Depends(get_kanban_service), user: User = Depends(get_current_user)):
+  updated_columns = await service.reorder_all_columns(board_id, user.id, column_data)
+  return SuccessResponse(
+    message=f'Усі колонки дошки з ID {board_id} успішно оновлені',
+    data=updated_columns
   )
   
 @router.delete('/delete_column', response_model=SuccessResponse[ColumnResponse])

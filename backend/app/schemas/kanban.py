@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field, ConfigDict
 from datetime import datetime
+from typing import List
 
 class CardBase(BaseModel):
   title: str = Field(...)
@@ -66,8 +67,12 @@ class ColumnResponse(BaseModel):
   
   model_config = ConfigDict(from_attributes=True)
 
-class ColumnListResponse(BaseModel):
-  columns: list[ColumnResponse]
+class ColumnOrderUpdate(BaseModel):
+  id: int
+  order: int
+  
+class ColumnOrdersUpdateList(BaseModel):
+  columns: List[ColumnOrderUpdate]
   
 class BoardBase(BaseModel):
   title: str = Field(...)

@@ -1,8 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.orm import selectinload
 from ..models.kanban import Board, Card, Column
-from ..schemas.kanban import BoardCreate, BoardUpdate, ColumnUpdate, CardUpdate, ColumnCreate, CardCreate
+from ..schemas.kanban import BoardCreate, BoardUpdate, ColumnUpdate, CardUpdate, ColumnCreate, CardCreate, ColumnOrdersUpdateList
 from ..core.utils import update_existing_entity
 from ..core.exceptions import AppError
 
@@ -120,6 +120,21 @@ class KanbanRepository:
       setattr(exist_column, key, value)
 
     return await update_existing_entity(self, exist_column, 'Помилка під час оновлення колонки')
+  
+  
+  async def reorder_all_columns(self, board_id: int, user_id: int, data: ColumnOrdersUpdateList):
+    exist_board = self.get_board_by_id(user_id, board_id)
+    
+    if exist_board is None:
+      raise AppError(400, 'Такой дошки не існує')
+
+    columns = [col.model_dump() for col in data.columns]
+    print(columns)
+    
+    await self.db.execute(update(Column), columns)
+    await self.db.commit()
+    
+    return columns
   
   
   async def delete_column(self, column: Column):

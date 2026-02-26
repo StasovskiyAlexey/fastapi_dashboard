@@ -1,5 +1,5 @@
 from ..repository.kanban_repository import KanbanRepository
-from ..schemas.kanban import BoardCreate, BoardUpdate, ColumnCreate, ColumnUpdate, CardCreate, CardUpdate
+from ..schemas.kanban import BoardCreate, BoardUpdate, ColumnCreate, ColumnUpdate, CardCreate, CardUpdate, ColumnOrdersUpdateList
 from ..core.exceptions import AppError
 
 class KanbanService:
@@ -68,6 +68,9 @@ class KanbanService:
   
   async def update_column(self, column_id: int, column: ColumnUpdate, board_id: int):
     return await self.repository.update_column(column_id, column, board_id)
+  
+  async def reorder_all_columns(self, board_id, user_id: int, data: ColumnOrdersUpdateList):
+    return await self.repository.reorder_all_columns(board_id, user_id, data)
   
   async def delete_column(self, column_id: int, board_id: int):
     exist_column = await self.repository.get_column_by_id(column_id, board_id)
