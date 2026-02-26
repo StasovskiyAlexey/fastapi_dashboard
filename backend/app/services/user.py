@@ -91,7 +91,4 @@ class UserService:
     await self.repository.update_user(user)
     
   async def delete_user(self, user_id: int):
-    if not user_id or user_id == 0:
-      raise AppError(404, f"Користувач за ID {user_id} не знайдено")
-    
     return await self.repository.delete_user(user_id)

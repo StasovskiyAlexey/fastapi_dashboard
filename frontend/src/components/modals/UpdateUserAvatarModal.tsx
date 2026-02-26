@@ -37,7 +37,7 @@ export default function UpdateUserAvatarModal() {
 
   return (
     <Dialog onOpenChange={() => switcher('isOpenUpdateAvatar', false)} open={modals.isOpenUpdateAvatar.isOpen}>
-      <DialogContent className="max-w-xl w-full">
+      <DialogContent className="sm:max-w-150 w-full">
         <DialogHeader>
           <DialogTitle>Обновить аватар</DialogTitle>
         </DialogHeader>

@@ -5,34 +5,35 @@ import { Calendar, Layers, Layout, MoreVertical, SquarePen, Trash } from "lucide
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { useBoardMutations } from "@/hooks/queries/useBoards";
 import useModalStore from "@/store/modal.store";
+import { memo } from "react";
 
-export default function BoardCard({board}: {board: TBoard}) {
+function BoardCard({board}: {board: TBoard}) {
   const { deleteBoard } = useBoardMutations()
-  const {switcher} = useModalStore()
-
+  const switcher = useModalStore((state) => state.switcher)
+  
   return (
     <>
-    <div className="group relative bg-white rounded-xl p-4 shadow-sm hover:shadow-xl min-w-85 transition-all duration-300 border border-gray-100 flex flex-col justify-between min-h-45">
-      <div className="absolute z-20 right-3">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button className="text-gray-400 hover:text-gray-600 p-1">
-              <MoreVertical size={18} />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuGroup>
-              <DropdownMenuItem className="cursor-pointer" onSelect={() => deleteBoard(board?.id as number)}><Trash size={15} /> Видалити дошку</DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer" onSelect={() => switcher('isOpenUpdateBoard', true, {board})}><SquarePen size={15} /> Оновити дошку</DropdownMenuItem>
-            </DropdownMenuGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+      <div className="group relative bg-white rounded-xl p-4 shadow-sm hover:shadow-xl min-w-85 transition-all duration-300 border border-gray-100 flex flex-col justify-between min-h-45">
+        <div className="absolute z-20 right-3">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="text-gray-400 hover:text-gray-600 p-1">
+                <MoreVertical size={18} />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuGroup>
+                <DropdownMenuItem className="cursor-pointer" onSelect={() => deleteBoard(board?.id as number)}><Trash size={15} /> Видалити дошку</DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer" onSelect={() => switcher('isOpenUpdateBoard', true, {board})}><SquarePen size={15} /> Оновити дошку</DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
 
-      <Link
-        to={`/boards/${board?.id}`}
-        className="absolute inset-0 z-10"
-      />
+        <Link
+          to={`/boards/${board?.id}`}
+          className="absolute inset-0 z-10"
+        />
 
         <div>
           <div className="flex justify-between items-start mb-4">
@@ -65,4 +66,4 @@ export default function BoardCard({board}: {board: TBoard}) {
   )
 }
 
-// TODO Ошибка что не весь блок является кликабельным, нужно пофиксить поведение Link чтобы можно было нажимать на троеточие и вызывать функцию без перехода на доску
+export default memo(BoardCard)

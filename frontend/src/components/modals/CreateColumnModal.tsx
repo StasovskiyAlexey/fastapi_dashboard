@@ -24,7 +24,7 @@ export default function CreateColumnModal() {
 
   return (
     <Dialog open={modals.isOpenCreateColumn.isOpen} onOpenChange={() => switcher('isOpenCreateColumn', false)}>
-      <DialogContent className="sm:max-w-105 p-0 overflow-hidden border-none shadow-2xl"> 
+      <DialogContent className="sm:max-w-150 p-0 overflow-hidden border-none shadow-2xl"> 
         <form onSubmit={handleCreateColumn} className="p-6">
           <DialogHeader className="mb-6">
             <div className="flex items-center gap-3">

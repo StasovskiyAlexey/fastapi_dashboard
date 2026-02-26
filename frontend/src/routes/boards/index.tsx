@@ -1,5 +1,5 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
-import Boards from '@/pages/Boards/Boards'
+import Boards from '@/pages/Board/Boards'
 
 export const Route = createFileRoute('/boards/')({
   beforeLoad: async ({context}) => {

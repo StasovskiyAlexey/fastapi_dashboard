@@ -9,6 +9,9 @@ export const useBoardsList = () => {
     queryKey: ['boards-list'],
     queryFn: kanbanService.getBoards,
     select: (data) => data.data,
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false
   });
 };
 

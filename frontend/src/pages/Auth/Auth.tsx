@@ -51,7 +51,7 @@ const AuthPage = () => {
 	}
 
 	return (
-		<div className='min-h-screen w-full flex justify-center items-center p-4'>
+		<div className='h-full w-full flex justify-center items-center p-4'>
 			<div className='auth-window rounded-xl flex flex-col md:grid md:grid-cols-2 shadow-md bg-white w-full max-w-4xl min-h-137.5'>
 				{/* Ліва частина: Форми */}
 				<div className='md:p-8 p-4 flex flex-col justify-center'>
@@ -105,7 +105,7 @@ const AuthPage = () => {
 							/>
 						</div>
 						<h1 className='text-4xl font-black text-white tracking-tight mb-4'>
-							FastAPI <span className='text-emerald-400'>Auth</span>
+							FastAPI <span className='text-emerald-400'>Dashboard</span>
 						</h1>
 						<p className='text-slate-400 max-w-70 leading-relaxed'>
 							Сучасна та безпечна система авторизації нового покоління

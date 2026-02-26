@@ -1,16 +1,18 @@
 import BoardCard from "@/components/BoardCard";
-import CreateBoardModal from "@/components/modals/CreateBoardModal";
-import UpdateBoardModal from "@/components/modals/UpdateBoardModal";
 import ScreenLoader from "@/components/ScreenLoader";
 import { Button } from "@/components/ui/button";
 import { useBoardsList } from "@/hooks/queries/useBoards";
 import useModalStore from "@/store/modal.store";
 import { Plus } from "lucide-react";
+import { lazy, Suspense } from "react";
+
+const UpdateBoardModal = lazy(() => import('@/components/modals/UpdateBoardModal'))
+const CreateBoardModal = lazy(() => import('@/components/modals/CreateBoardModal'))
 
 export default function Boards() {
   const {data, isLoading} = useBoardsList()
-  const {switcher} = useModalStore()
-
+  const switcher = useModalStore((state) => state.switcher)
+  
   if (isLoading) {
     return <ScreenLoader/>
   }
@@ -42,8 +44,11 @@ export default function Boards() {
           <BoardCard key={board?.id} board={board}/>
         ))}
       </div>
-      <UpdateBoardModal/>
-      <CreateBoardModal/>
+
+      <Suspense fallback={<ScreenLoader/>}>
+        <UpdateBoardModal/>
+        <CreateBoardModal/>
+      </Suspense>
     </>
   )
 }

@@ -104,7 +104,7 @@ async def update_user_password(data: UserPasswordRequest, service: UserService =
 @router.delete('/delete_user', response_model=SuccessResponse[UserResponse])
 async def delete_user(response: Response, user: User = Depends(get_current_user), service: UserService = Depends(get_user_service)):
   deleted_user = await service.delete_user(user.id)
-  
+  print('user', user)
   response.delete_cookie(
     key='access_token',
     path='/',

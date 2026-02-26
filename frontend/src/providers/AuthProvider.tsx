@@ -32,7 +32,6 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
 			await router.invalidate()
 
 			toast.success(res.message)
-			console.log(res)
 
 			navigate({ to: '/' })
 		} catch (e) {
@@ -51,7 +50,6 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
 			if (res?.data) {
 				setUser(res.data)
 			}
-			console.log(res)
 			return res?.data
 		} catch (e) {
 			console.log(e)

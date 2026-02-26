@@ -11,10 +11,11 @@ import {
   useSortable
 }  from '@dnd-kit/sortable'
 import { CSS } from "@dnd-kit/utilities";
+import { memo } from "react";
 
-export default function ColumnCard({column, boardId, columnId}: {column: TColumn, boardId: number, columnId: number}) {
+function ColumnCard({column, boardId, columnId}: {column: TColumn, boardId: number, columnId: number}) {
   const {deleteColumn} = useColumnMutations()
-  const {switcher} = useModalStore()
+  const switcher = useModalStore((state) => state.switcher)
   const {data: cards} = useCardsList(boardId, columnId)
 
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({id: columnId})
@@ -64,3 +65,7 @@ export default function ColumnCard({column, boardId, columnId}: {column: TColumn
     </div>
   )
 }
+
+export default memo(ColumnCard)
+
+// TODO Еще было бы неплохо делать не кучу запросов а один

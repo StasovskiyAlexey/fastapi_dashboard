@@ -35,7 +35,7 @@ export default function UpdateBoardModal() {
 
   return (
     <Dialog onOpenChange={() => switcher('isOpenUpdateBoard', false)} open={modals.isOpenUpdateBoard.isOpen}>
-      <DialogContent className="sm:max-w-105 p-0 overflow-hidden border-none shadow-2xl">
+      <DialogContent className="sm:max-w-150 p-0 overflow-hidden border-none shadow-2xl">
         <form className='p-6' onSubmit={handleUpdateBoard}>
           <DialogHeader className="mb-6">
             <div className="flex items-center gap-3">

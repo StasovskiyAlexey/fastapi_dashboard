@@ -27,13 +27,13 @@ export default function CreateCardModal() {
 
   useEffect(() => {
     if (!modals.isOpenCreateCard.isOpen) {
-      switcher('isOpenCreateCard', false)
+      setCard({title: '', description: ''})
     }
   }, [modals.isOpenCreateCard.isOpen])
 
   return (
     <Dialog onOpenChange={() => switcher('isOpenCreateCard', false)} open={modals.isOpenCreateCard.isOpen}>
-      <DialogContent className="sm:max-w-105 p-0 overflow-hidden border-none shadow-2xl"> 
+      <DialogContent className="sm:max-w-150 p-0 overflow-hidden border-none shadow-2xl"> 
         <form onSubmit={handleCreateCard} className="p-6">
           <DialogHeader className="mb-6">
             <div className="flex items-center gap-3">
@@ -104,7 +104,7 @@ export default function CreateCardModal() {
             <Button
               disabled={!card.title.length || !card.description.length}
               type="submit"
-              className="rounded-xl bg-blue-600 px-6 font-bold text-white hover:bg-blue-700 shadow-lg shadow-blue-200 active:scale-95 transition-all"
+              className="rounded-xl bg-blue-600 px-6 text-white hover:bg-blue-700 shadow-lg shadow-blue-200 active:scale-95 transition-all"
             >
               <Plus size={18} />
               Створити картку

@@ -35,7 +35,7 @@ export default function UpdateCardModal() {
       onOpenChange={() => switcher('isOpenUpdateCard', false)} 
       open={modals.isOpenUpdateCard.isOpen}
     >
-      <DialogContent className="sm:max-w-105 p-0 overflow-hidden border-none shadow-2xl">
+      <DialogContent className="sm:max-w-150 p-0 overflow-hidden border-none shadow-2xl">
         <form onSubmit={handleUpdateCard} className="p-6">
           <DialogHeader className="mb-6">
             <div className="flex items-center gap-3">
@@ -87,7 +87,7 @@ export default function UpdateCardModal() {
                 onChange={(e) => setCard((prev) => ({ ...prev, description: e.target.value }))}
                 id="update-card-desc"
                 placeholder="Додайте деталі..."
-                className="min-h-25 border-gray-200 rounded-xl focus-visible:ring-1 focus-visible:ring-violet-500 transition-all resize-none p-4"
+                className="min-h-25 max-h-120 overflow-auto border-gray-200 rounded-xl focus-visible:ring-1 focus-visible:ring-violet-500 transition-all resize-none p-4"
               />
             </div>
           </div>

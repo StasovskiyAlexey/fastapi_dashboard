@@ -55,7 +55,7 @@ export const Sidebar = () => {
                   }
                 `}
               >
-                {/* Левый индикатор активности */}
+
                 {isActive && (
                   <div className="absolute left-0 w-1 h-6 bg-indigo-600 rounded-r-full" />
                 )}
@@ -88,7 +88,6 @@ export const Sidebar = () => {
         </ul>
       </nav>
 
-      {/* 3. Нижня частина: Профіль та Вихід */}
       <div className="mt-auto border-t border-slate-100 pt-4">
         <div className="mb-4 flex items-center gap-3 px-2">
           <Avatar className="z-0" size="default">

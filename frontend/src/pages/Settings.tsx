@@ -6,13 +6,14 @@ import { Separator } from "@/components/ui/separator"
 import { useAuth } from "@/providers/AuthProvider"
 import { useNavigate } from "@tanstack/react-router"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { useEffect, useState } from "react"
+import { lazy, Suspense, useEffect, useState } from "react"
 import { Plus } from "lucide-react"
 import { getImageUrl } from "@/lib/utils"
-import UpdateUserAvatarModal from "@/components/modals/UpdateUserAvatarModal"
 import useModalStore from "@/store/modal.store"
 import { useUsers } from "@/hooks/queries/useUsers"
-import ConfirmModal from "@/components/modals/ConfirmModal"
+
+const UpdateUserAvatarModal = lazy(() => import('@/components/modals/UpdateUserAvatarModal'))
+const ConfirmModal = lazy(() => import('@/components/modals/ConfirmModal'))
 
 function Settings() {
   const {user, loading} = useAuth()
@@ -64,8 +65,8 @@ function Settings() {
   }
 
   return (
+    <>
     <div className="flex-1 h-full w-full mx-auto">
-      {/* Заголовок страницы */}
       <div>
         <h2 className="text-3xl font-bold tracking-tight">Налаштування аккаунта</h2>
         <p className="text-muted-foreground">
@@ -76,7 +77,6 @@ function Settings() {
       <Separator className="mt-6" />
 
       <div className="py-10">
-        {/* Секция профиля */}
         <div className="space-y-6">
           <div className="relative w-max">
             <div className="absolute -top-2 -right-2 z-10">
@@ -107,7 +107,6 @@ function Settings() {
         
         <Separator className="my-6" />
 
-        {/* Секция безопасности */}
         <div className="space-y-6">
           <div>
             <h3 className="text-lg font-medium">Пароль</h3>
@@ -134,14 +133,17 @@ function Settings() {
             <p className="text-sm text-muted-foreground">Якщо ви видалите цей акаунт, доступу до нього більше не буде.</p>
           </div>
           <div className="space-y-4">
-            {/* <Button onClick={() => setOpen({modal: 'deleteUser', trigger: true})} variant="destructive" className="w-fit">Видалити акаунт</Button> */}
             <Button onClick={deleteUserAccount} variant="destructive" className="w-fit">Видалити акаунт</Button>
           </div>
         </div>
       </div>
+    </div>
+
+    <Suspense fallback={<ScreenLoader/>}>
       <ConfirmModal/>
       <UpdateUserAvatarModal/>
-    </div>
+    </Suspense>
+    </>
   )
 }
 

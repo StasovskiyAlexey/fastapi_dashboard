@@ -1,8 +1,4 @@
 import ColumnCard from "@/components/ColumnCard";
-import CreateCardModal from "@/components/modals/CreateCardModal";
-import CreateColumnModal from "@/components/modals/CreateColumnModal";
-import UpdateCardModal from "@/components/modals/UpdateCardModal";
-import UpdateColumnModal from "@/components/modals/UpdateColumnModal";
 import ScreenLoader from "@/components/ScreenLoader";
 import { Button } from "@/components/ui/button";
 import { useBoard } from "@/hooks/queries/useBoards";
@@ -14,13 +10,18 @@ import { MoveLeft, Plus } from "lucide-react";
 import { DndContext, DragOverlay } from "@dnd-kit/core";
 import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { queryClient } from "@/lib/query-client";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
+
+const CreateCardModal = lazy(() => import('@/components/modals/CreateCardModal'))
+const CreateColumnModal = lazy(() => import('@/components/modals/CreateColumnModal'))
+const UpdateCardModal = lazy(() => import('@/components/modals/UpdateCardModal'))
+const UpdateColumnModal = lazy(() => import('@/components/modals/UpdateColumnModal'))
 
 export default function BoardDetail() {
   const boardId = parseInt(useParams({strict: false}).boardId)
   const [activeId, setActiveId] = useState<number>(0)
 
-  const {switcher} = useModalStore()
+  const switcher = useModalStore((state) => state.switcher)
   const router = useRouter()
 
   const {data: board} = useBoard(boardId)
@@ -58,7 +59,7 @@ export default function BoardDetail() {
       <div className="overflow-hidden h-full flex flex-col">
         <header className="px-4 py-5 bg-white/80 backdrop-blur-md sticky top-0 z-10 flex rounded-xl justify-between items-center border-b border-slate-100">
           <div className="flex items-center gap-4">
-            <Button 
+            <Button
               variant="ghost" 
               size="icon" 
               onClick={() => router.history.back()}
@@ -87,7 +88,7 @@ export default function BoardDetail() {
 
         <DndContext onDragEnd={handleDragEnd}>
           <SortableContext items={columns?.map(el => el?.id as number) || []} strategy={verticalListSortingStrategy}>
-            <main className="flex-1 overflow-x-auto p-4 flex gap-6 items-start">
+            <main className="flex-1 overflow-x-auto py-4 flex gap-6 items-start">
               {columns?.length === 0 && `У дошці ${board?.title} немає активних колонок...`}
               {columns?.length !== 0 && columns?.map((column) => (
                 <ColumnCard
@@ -105,10 +106,13 @@ export default function BoardDetail() {
           </SortableContext>
         </DndContext>
       </div>
-      <CreateColumnModal/>
-      <CreateCardModal/>
-      <UpdateColumnModal/>
-      <UpdateCardModal/>
+
+      <Suspense fallback={<ScreenLoader/>}>
+        <CreateColumnModal/>
+        <CreateCardModal/>
+        <UpdateColumnModal/>
+        <UpdateCardModal/>
+      </Suspense>
     </>
   )
 }

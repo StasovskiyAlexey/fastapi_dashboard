@@ -35,7 +35,7 @@ class Card(Base):
   description: Mapped[Optional[str]] = mapped_column(Text)
   column_id: Mapped[int] = mapped_column(ForeignKey('columns.id', ondelete='CASCADE'))
   order: Mapped[int] = mapped_column(default=1)
-  creator_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
+  creator_id: Mapped[int] = mapped_column(ForeignKey('users.id', ondelete='CASCADE'))
   column: Mapped["Column"] = relationship(back_populates="cards")
   
   created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
