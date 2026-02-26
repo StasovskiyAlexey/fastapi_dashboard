@@ -46,7 +46,6 @@ class ColumnBase(BaseModel):
 class ColumnCreate(BaseModel):
   title: str = Field(...)
   board_id: int = Field(...)
-  order: int = Field(..., ge=1)
   
   model_config = ConfigDict(from_attributes=True)
   

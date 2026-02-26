@@ -84,7 +84,18 @@ class KanbanRepository:
   
   
   async def create_column(self, column: ColumnCreate):
-    new_column = Column(title=column.title, board_id=column.board_id, order=column.order)
+    
+    # Тут делаем фильтрацию по максимальному количеству order, чтобы новые карточки добавлять в конец
+    query = select(Column).filter_by(board_id=column.board_id).order_by(Column.order.desc()).limit(1)
+    columns = await self.db.execute(query)
+    column_with_high_order = columns.scalars().first()
+
+    if column_with_high_order is None:
+      order = 1
+    else:
+      order = column_with_high_order.order + 1
+
+    new_column = Column(title=column.title, board_id=column.board_id, order=order)
     self.db.add(new_column)
     
     try:
@@ -97,11 +108,11 @@ class KanbanRepository:
       raise AppError(400, f'{e}')
   
   
-  async def update_column(self, column_data: ColumnUpdate, board_id: int):
-    exist_column = await self.get_column_by_title(column_data.title, board_id)
+  async def update_column(self, column_id: int, column_data: ColumnUpdate, board_id: int):
+    exist_column = await self.get_column_by_id(column_id, board_id)
     
     if exist_column is None:
-      raise AppError(404, f"Колонка з назвою “{column_data.title}” не знайдена на дошці {board_id}")
+      raise AppError(404, f"Колонка з ID “{column_id}” не знайдена на дошці {board_id}")
     
     updated_data = column_data.model_dump(exclude_unset=False)
     

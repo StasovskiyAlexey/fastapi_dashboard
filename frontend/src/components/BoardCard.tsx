@@ -3,11 +3,11 @@ import type { TBoard } from "@/types/kanban";
 import { Link } from "@tanstack/react-router";
 import { Calendar, Layers, Layout, MoreVertical, SquarePen, Trash } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
-import { useBoards } from "@/hooks/queries/useBoards";
+import { useBoardMutations } from "@/hooks/queries/useBoards";
 import useModalStore from "@/store/modal.store";
 
 export default function BoardCard({board}: {board: TBoard}) {
-  const { deleteBoard } = useBoards()
+  const { deleteBoard } = useBoardMutations()
   const {switcher} = useModalStore()
 
   return (

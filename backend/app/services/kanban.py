@@ -51,13 +51,13 @@ class KanbanService:
     exist_column = await self.repository.get_column_by_id(column_id, board_id)
     
     if not exist_column:
-      raise AppError(400, f'Колонки з ID {column_id} не знайдено')
+      raise AppError(400, f'Колонку з ID {column_id} не знайдено')
     
     return exist_column
   
   async def create_column(self, column: ColumnCreate):
     if column.board_id is None and column.board_id <= 0:
-      raise AppError(400, f'Нельзя создать колонку с ID доски {column.board_id}')
+      raise AppError(400, f'Неможливо створити колонку з ID дошки {column.board_id}')
     
     exist_column = await self.repository.get_column_by_title(column.title, column.board_id)
     
@@ -66,8 +66,8 @@ class KanbanService:
     
     return await self.repository.create_column(column)
   
-  async def update_column(self, column: ColumnUpdate, board_id: int):
-    return await self.repository.update_column(column, board_id)
+  async def update_column(self, column_id: int, column: ColumnUpdate, board_id: int):
+    return await self.repository.update_column(column_id, column, board_id)
   
   async def delete_column(self, column_id: int, board_id: int):
     exist_column = await self.repository.get_column_by_id(column_id, board_id)
@@ -103,7 +103,7 @@ class KanbanService:
     return await self.repository.create_card(card, column_id, creator_id)
   
   async def update_card(self, card_id: int, column_id: int, card: CardUpdate, user_id: int):
-    exist_card = await self.repository.get_card_by_title(card.title, column_id)
+    exist_card = await self.repository.get_card_by_id(card_id, column_id)
 
     if exist_card is None:
       raise AppError(400, f'Картки з ID {card_id} не існує')

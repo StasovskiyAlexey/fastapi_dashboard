@@ -232,10 +232,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
-        put?: never;
         /** Get Board By Id */
-        post: operations["get_board_by_id_kanban_get_board_by_id_post"];
+        get: operations["get_board_by_id_kanban_get_board_by_id_get"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -317,10 +317,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
-        put?: never;
         /** Get Column */
-        post: operations["get_column_kanban_get_column_by_id_post"];
+        get: operations["get_column_kanban_get_column_by_id_get"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -402,10 +402,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
-        put?: never;
         /** Get Card */
-        post: operations["get_card_kanban_get_card_by_id_post"];
+        get: operations["get_card_kanban_get_card_by_id_get"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -503,8 +503,6 @@ export interface components {
         };
         /** Body_update_user_users_update_user_patch */
         Body_update_user_users_update_user_patch: {
-            /** Avatar Url */
-            avatar_url?: string | null;
             /** Login */
             login: string;
             /** Email */
@@ -569,11 +567,6 @@ export interface components {
             board_id: number;
             /** Order */
             order: number;
-        };
-        /** ColumnListResponse */
-        ColumnListResponse: {
-            /** Columns */
-            columns: components["schemas"]["ColumnResponse"][];
         };
         /** ColumnResponse */
         ColumnResponse: {
@@ -650,17 +643,6 @@ export interface components {
             message?: string | null;
             data?: components["schemas"]["CardResponse"] | null;
         };
-        /** SuccessResponse[ColumnListResponse] */
-        SuccessResponse_ColumnListResponse_: {
-            /**
-             * Status
-             * @default 200
-             */
-            status: number;
-            /** Message */
-            message?: string | null;
-            data?: components["schemas"]["ColumnListResponse"] | null;
-        };
         /** SuccessResponse[ColumnResponse] */
         SuccessResponse_ColumnResponse_: {
             /**
@@ -705,6 +687,18 @@ export interface components {
             message?: string | null;
             /** Data */
             data?: components["schemas"]["BoardResponse"][] | null;
+        };
+        /** SuccessResponse[list[ColumnResponse]] */
+        SuccessResponse_list_ColumnResponse__: {
+            /**
+             * Status
+             * @default 200
+             */
+            status: number;
+            /** Message */
+            message?: string | null;
+            /** Data */
+            data?: components["schemas"]["ColumnResponse"][] | null;
         };
         /** UserCreate */
         UserCreate: {
@@ -953,7 +947,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "multipart/form-data": components["schemas"]["Body_update_user_users_update_user_patch"];
+                "application/x-www-form-urlencoded": components["schemas"]["Body_update_user_users_update_user_patch"];
             };
         };
         responses: {
@@ -1012,9 +1006,7 @@ export interface operations {
     };
     delete_user_users_delete_user_delete: {
         parameters: {
-            query: {
-                user_id: number;
-            };
+            query?: never;
             header?: never;
             path?: never;
             cookie?: never;
@@ -1028,15 +1020,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SuccessResponse_UserResponse_"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -1127,7 +1110,7 @@ export interface operations {
             };
         };
     };
-    get_board_by_id_kanban_get_board_by_id_post: {
+    get_board_by_id_kanban_get_board_by_id_get: {
         parameters: {
             query: {
                 board_id: number;
@@ -1274,7 +1257,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["SuccessResponse_ColumnListResponse_"];
+                    "application/json": components["schemas"]["SuccessResponse_list_ColumnResponse__"];
                 };
             };
             /** @description Validation Error */
@@ -1288,7 +1271,7 @@ export interface operations {
             };
         };
     };
-    get_column_kanban_get_column_by_id_post: {
+    get_column_kanban_get_column_by_id_get: {
         parameters: {
             query: {
                 board_id: number;
@@ -1356,6 +1339,7 @@ export interface operations {
     update_column_kanban_update_column_patch: {
         parameters: {
             query: {
+                column_id: number;
                 board_id: number;
             };
             header?: never;
@@ -1452,7 +1436,7 @@ export interface operations {
             };
         };
     };
-    get_card_kanban_get_card_by_id_post: {
+    get_card_kanban_get_card_by_id_get: {
         parameters: {
             query: {
                 card_id: number;

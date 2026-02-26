@@ -1,87 +1,54 @@
+import ColumnCard from "@/components/ColumnCard";
+import CreateCardModal from "@/components/modals/CreateCardModal";
+import CreateColumnModal from "@/components/modals/CreateColumnModal";
+import UpdateCardModal from "@/components/modals/UpdateCardModal";
+import UpdateColumnModal from "@/components/modals/UpdateColumnModal";
 import ScreenLoader from "@/components/ScreenLoader";
-import { useBoards } from "@/hooks/queries/useBoards";
-import { useParams } from "@tanstack/react-router";
-import { GripVertical, MoreHorizontal, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useBoard } from "@/hooks/queries/useBoards";
+import { useColumnsList } from "@/hooks/queries/useColumns";
+import useModalStore from "@/store/modal.store";
+import { useParams, useRouter } from "@tanstack/react-router";
+import { MoveLeft, Plus } from "lucide-react";
 
 export default function BoardDetail() {
-  const boardId = useParams({strict: false}).boardId
-  const {board, isLoadingBoard} = useBoards(Number(boardId))
+  const boardId = parseInt(useParams({strict: false}).boardId)
 
-  if (isLoadingBoard) {
+  const {switcher} = useModalStore()
+  const router = useRouter()
+
+  const {data: board} = useBoard(boardId)
+  const {data: columns, isLoading} = useColumnsList(boardId)
+  console.log(columns)
+  if (isLoading) {
     return <ScreenLoader/>
   }
-  
+
   return (
-    <div className="h-screen flex flex-col bg-slate-50">
-      {/* Шапка дошки */}
-      <header className="px-6 py-4 bg-white border-b border-slate-200 flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-slate-800">{board?.title}</h1>
-        <button className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors shadow-sm">
-          <Plus size={18} />
-          <span>Додати колонку</span>
-        </button>
-      </header>
-
-      {/* Контейнер для колонок */}
-      <main className="flex-1 overflow-x-auto p-6 flex gap-6 items-start">
-        {board?.columns.map((column) => (
-          <div key={column.id} className="w-80 shrink-0 flex flex-col bg-slate-100 rounded-xl max-h-full border border-slate-200 shadow-sm">
-            
-            {/* Заголовок колонки */}
-            <div className="p-4 flex justify-between items-center group">
-              <div className="flex items-center gap-2">
-                <GripVertical className="text-slate-400 opacity-0 group-hover:opacity-100 cursor-grab transition-opacity" size={16} />
-                <h2 className="font-semibold text-slate-700">{column.title}</h2>
-                <span className="bg-slate-200 text-slate-600 text-xs px-2 py-0.5 rounded-full">
-                  {column.cards.length}
-                </span>
-              </div>
-              <button className="text-slate-400 hover:text-slate-600">
-                <MoreHorizontal size={18} />
-              </button>
-            </div>
-
-            {/* Список карток */}
-            <div className="flex-1 overflow-y-auto px-3 pb-3 space-y-3">
-              {column.cards.map((card) => (
-                <div 
-                  key={card.id} 
-                  className="bg-white p-4 rounded-lg shadow-sm border border-slate-200 hover:border-indigo-300 hover:shadow-md transition-all cursor-pointer group"
-                >
-                  <h3 className="text-sm font-medium text-slate-800 mb-2">{card.title}</h3>
-                  {card.description && (
-                    <p className="text-xs text-slate-500 line-clamp-2">{card.description}</p>
-                  )}
-                  
-                  {/* Футер картки */}
-                  <div className="mt-3 pt-3 border-t border-slate-50 flex justify-between items-center">
-                    <div className="flex -space-x-2">
-                      <div className="w-6 h-6 rounded-full bg-indigo-100 border-2 border-white flex items-center justify-center text-[10px] text-indigo-600 font-bold">
-                        JD
-                      </div>
-                    </div>
-                    <span className="text-[10px] text-slate-400 font-medium italic">
-                      {new Date(card.created_at).toLocaleDateString()}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Кнопка додавання картки */}
-            <button className="m-3 flex items-center gap-2 px-3 py-2 text-sm text-slate-500 hover:bg-slate-200 rounded-lg transition-colors">
-              <Plus size={16} />
-              <span>Додати картку</span>
-            </button>
+    <>
+      <div className="overflow-hidden h-full flex flex-col">
+        <header className="px-6 rounded-2xl py-4 bg-white border-b border-slate-200 flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-slate-800">{board?.title}</h1>
+          <div className="flex gap-4">
+            <Button onClick={() => switcher('isOpenCreateColumn', true, {boardId})} className="bg-indigo-700 hover:bg-indigo-500">
+              <Plus size={18} />
+              <span>Додати колонку</span>
+            </Button>
+            <Button className="bg-indigo-700 hover:bg-indigo-500" variant='outline' onClick={() => router.history.back()}><MoveLeft color="#fff" /></Button>
           </div>
-        ))}
+        </header>
 
-        {/* Заглушка для нової колонки */}
-        <button className="w-80 shrink-0 h-12 border-2 border-dashed border-slate-300 rounded-xl flex items-center justify-center text-slate-400 hover:text-slate-600 hover:border-slate-400 hover:bg-slate-50 transition-all">
-          <Plus size={20} className="mr-2" />
-          <span className="font-medium">Створити нову колонку</span>
-        </button>
-      </main>
-    </div>
+        <main className="flex-1 overflow-x-auto p-4 flex gap-6 items-start">
+          {!columns?.length && `У дошці ${board?.title} немає активних колонок...`}
+          {columns?.length !== 0 && columns?.sort((a, b) => a!.order - b!.order).map((column) => (
+            <ColumnCard column={column} key={column?.id} columnId={column?.id as number} boardId={boardId}  />
+          ))}
+        </main>
+      </div>
+      <CreateColumnModal/>
+      <CreateCardModal/>
+      <UpdateColumnModal/>
+      <UpdateCardModal/>
+    </>
   )
 }

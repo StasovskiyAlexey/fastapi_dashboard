@@ -4,7 +4,11 @@ export type TModals = {
   isOpenUpdateBoard: any,
   isOpenUpdateAvatar: any
   isOpenCreateBoard: any,
-  isOpenConfirmModal: any
+  isOpenConfirmModal: any,
+  isOpenCreateColumn: any,
+  isOpenUpdateColumn: any,
+  isOpenCreateCard: any,
+  isOpenUpdateCard: any
 }
 
 export type TModalStore = {
@@ -20,7 +24,11 @@ const useModalStore = create<TModalStore>((set) => ({
     isOpenUpdateBoard: {isOpen: false, data: null},
     isOpenUpdateAvatar: {isOpen: false, data: null},
     isOpenCreateBoard: {isOpen: false, data: null},
-    isOpenConfirmModal: {isOpen: false, data: null}
+    isOpenConfirmModal: {isOpen: false, data: null},
+    isOpenCreateColumn: {isOpen: false, data: null},
+    isOpenUpdateColumn: {isOpen: false, data: null},
+    isOpenCreateCard: {isOpen: false, data: null},
+    isOpenUpdateCard: {isOpen: false, data: null},
   },
 
   switcher: (modal, isOpen, data) => set((state) => ({

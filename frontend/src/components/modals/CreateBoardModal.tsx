@@ -4,7 +4,7 @@ import { Label } from '../ui/label'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import useModalStore from '@/store/modal.store'
-import { useBoards } from '@/hooks/queries/useBoards'
+import { useBoardMutations } from '@/hooks/queries/useBoards'
 import { useEffect, useState, type FormEvent } from 'react'
 import { useAuth } from '@/providers/AuthProvider'
 
@@ -15,11 +15,11 @@ export default function CreateBoardModal() {
   
   const {modals, switcher} = useModalStore()
   const {user} = useAuth()
-  const {createBoard} = useBoards()
+  const {createBoard} = useBoardMutations()
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    createBoard({data: {title: board.title}})
+    createBoard(board.title)
     switcher('isOpenCreateBoard', false)
   }
 
@@ -51,7 +51,7 @@ export default function CreateBoardModal() {
             <div className="space-y-2">
               <Label 
                 htmlFor="create-title" 
-                className="text-xs font-black uppercase tracking-widest text-gray-500 ml-1"
+                className="text-xs uppercase tracking-widest text-gray-500 ml-1"
               >
                 Назва дошки
               </Label>
@@ -61,12 +61,12 @@ export default function CreateBoardModal() {
                 id="create-title"
                 autoFocus
                 placeholder="Назва дошки"
-                className="h-12 border-gray-200 rounded-xl focus-visible:ring-indigo-600 transition-all text-base px-4"
+                className="h-12 border-gray-200 rounded-xl focus-visible:ring-1 transition-all text-base px-4"
               />
             </div>
           </div>
 
-          <DialogFooter className="mt-8 gap-2 sm:gap-0">
+          <DialogFooter className="mt-8 gap-2 flex">
             <Button
               onClick={() => switcher('isOpenCreateBoard', false)}
               type="reset"
@@ -75,7 +75,8 @@ export default function CreateBoardModal() {
             >
               Скасувати
             </Button>
-            <Button 
+            <Button
+              disabled={!board.title.length}
               type="submit"
               className="rounded-xl bg-indigo-600 px-6 font-bold text-white hover:bg-indigo-700 shadow-lg shadow-indigo-200 active:scale-95 transition-all"
             >

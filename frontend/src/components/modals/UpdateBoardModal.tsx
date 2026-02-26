@@ -4,7 +4,7 @@ import { Label } from '../ui/label'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { useEffect, useState, type FormEvent } from 'react'
-import { useBoards } from '@/hooks/queries/useBoards'
+import { useBoardMutations } from '@/hooks/queries/useBoards'
 import useModalStore from '@/store/modal.store'
 
 export default function UpdateBoardModal() {
@@ -13,7 +13,7 @@ export default function UpdateBoardModal() {
     boardId: 0
   })
 
-  const {updateBoard} = useBoards()
+  const {updateBoard} = useBoardMutations()
   const { modals, switcher } = useModalStore()
 
   const board = modals.isOpenUpdateBoard.data?.board
@@ -22,10 +22,7 @@ export default function UpdateBoardModal() {
   function handleUpdateBoard(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (boardData.boardId && boardData.title.trim()) {
-      updateBoard({
-        data: {title: boardData.title.trim()},
-        boardId: boardData?.boardId
-      })
+      updateBoard({boardId: boardData?.boardId, title: boardData.title.trim()})
     }
     switcher('isOpenUpdateBoard', false)
   }

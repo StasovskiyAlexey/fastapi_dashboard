@@ -16,7 +16,7 @@ async def get_boards(user: User = Depends(get_current_user), service: KanbanServ
     data=boards
   )
 
-@router.post('/get_board_by_id', response_model=SuccessResponse[BoardResponse])
+@router.get('/get_board_by_id', response_model=SuccessResponse[BoardResponse])
 async def get_board_by_id(board_id: int, user: User = Depends(get_current_user), service: KanbanService = Depends(get_kanban_service)):
   board = await service.get_board_by_id(user.id, board_id)
   return SuccessResponse(
@@ -48,14 +48,14 @@ async def delete_board(board_id: int, user: User = Depends(get_current_user), se
   )
 
 
-@router.get('/get_columns', response_model=SuccessResponse[ColumnListResponse])
+@router.get('/get_columns', response_model=SuccessResponse[list[ColumnResponse]])
 async def get_columns(board_id: int, user: User = Depends(get_current_user), service: KanbanService = Depends(get_kanban_service)):
   columns = await service.get_all_columns(board_id, user.id)
   return SuccessResponse(
-    data={'columns': columns}
+    data=columns
   )
 
-@router.post('/get_column_by_id', response_model=SuccessResponse[ColumnResponse])
+@router.get('/get_column_by_id', response_model=SuccessResponse[ColumnResponse])
 async def get_column(board_id: int, column_id: int, service: KanbanService = Depends(get_kanban_service)):
   column = await service.get_column_by_id(column_id, board_id)
   return SuccessResponse(
@@ -71,8 +71,8 @@ async def create_column(column_data: ColumnCreate, service: KanbanService = Depe
   )
   
 @router.patch('/update_column', response_model=SuccessResponse[ColumnResponse])
-async def update_column(board_id: int, column_data: ColumnUpdate, service: KanbanService = Depends(get_kanban_service)):
-  new_column = await service.update_column(column_data, board_id)
+async def update_column(column_id: int, board_id: int, column_data: ColumnUpdate, service: KanbanService = Depends(get_kanban_service)):
+  new_column = await service.update_column(column_id, column_data, board_id)
   return SuccessResponse(
     message='Колонка успішно оновлена',
     data=new_column
@@ -87,14 +87,14 @@ async def delete_column(board_id: int, column_id: int, service: KanbanService = 
   )
 
   
-@router.get('/get_cards', response_model=SuccessResponse[CardListResponse])
+@router.get('/get_cards', response_model=SuccessResponse[list[CardResponse]])
 async def get_cards(board_id: int, column_id: int, service: KanbanService = Depends(get_kanban_service)):
   cards = await service.get_all_cards(column_id, board_id)
   return SuccessResponse(
-    data={'cards': cards}
+    data=cards
   )
   
-@router.post('/get_card_by_id', response_model=SuccessResponse[CardResponse])
+@router.get('/get_card_by_id', response_model=SuccessResponse[CardResponse])
 async def get_card(card_id: int, column_id: int, service: KanbanService = Depends(get_kanban_service)):
   card = await service.get_card_by_id(card_id, column_id)
   return SuccessResponse( 

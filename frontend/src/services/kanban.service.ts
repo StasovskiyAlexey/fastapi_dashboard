@@ -1,5 +1,5 @@
 import { axiosClient } from "@/api/client";
-import type { TBoard, TCreateBoard, TUpdateBoard } from "@/types/kanban";
+import type { TBoard, TCard, TColumn, TUpdateBoard } from "@/types/kanban";
 import type { TSuccessResponse } from "@/types/response";
 
 class KanbanService {
@@ -8,14 +8,14 @@ class KanbanService {
   }
 
   async getBoard(boardId?: number): Promise<TSuccessResponse<TBoard>> {
-    return await axiosClient.post('/kanban/get_board_by_id', {}, {
+    return await axiosClient.get('/kanban/get_board_by_id', {
       params: {
         board_id: boardId
       }
     })
   }
 
-  async createBoard({data}: {data: {title: string}}): Promise<TSuccessResponse<TCreateBoard>> {
+  async createBoard({data}: {data: {title: string}}): Promise<TSuccessResponse<TBoard>> {
     return await axiosClient.post('/kanban/create_board', {title: data?.title})
   }
 
@@ -29,6 +29,86 @@ class KanbanService {
 
   async deleteBoard(boardId: number): Promise<TSuccessResponse<TBoard>> {
     return await axiosClient.delete('/kanban/delete_board', {params: {board_id: boardId}})
+  }
+  
+
+  async getColumns(boardId?: number): Promise<TSuccessResponse<TColumn[]>> {
+    return await axiosClient.get('/kanban/get_columns', {
+      params: {
+        board_id: boardId
+      }
+    })
+  }
+
+  async getColumn(boardId?: number, columnId?: number): Promise<TSuccessResponse<TColumn>> {
+    return await axiosClient.get('/kanban/get_column_by_id', {
+      params: {
+        board_id: boardId,
+        column_id: columnId
+      }
+    })
+  }
+
+  async createColumn(title: string, boardId: number): Promise<TSuccessResponse<TColumn>> {
+    return await axiosClient.post('/kanban/create_column', {title, board_id: boardId})
+  }
+
+  async updateColumn(title: string, order: number, columnId: number, boardId: number): Promise<TSuccessResponse<TColumn>> {
+    return await axiosClient.patch('/kanban/update_column', {title, order}, {
+      params: {
+        column_id: columnId,
+        board_id: boardId
+      }
+    })
+  }
+
+  async deleteColumn(boardId: number, columnId: number): Promise<TSuccessResponse<TColumn>> {
+    return await axiosClient.delete('/kanban/delete_column', {params: {board_id: boardId, column_id: columnId}})
+  }
+
+
+  async getCards(boardId?: number, columnId?: number): Promise<TSuccessResponse<TCard[]>> {
+    return await axiosClient.get('/kanban/get_cards', {
+      params: {
+        board_id: boardId,
+        column_id: columnId
+      }
+    })
+  }
+
+  async getCard(cardId?: number, columnId?: number): Promise<TSuccessResponse<TCard>> {
+    return await axiosClient.get('/kanban/get_card_by_id', {
+      params: {
+        card_id: cardId,
+        column_id: columnId
+      }
+    })
+  }
+
+  async createCard(columnId: number, data: {title: string, description: string, order: number}): Promise<TSuccessResponse<TCard>> {
+    return await axiosClient.post('/kanban/create_card', {title: data.title, description: data.description, order: data.order}, {
+      params: {
+        column_id: columnId
+      }
+    })
+  }
+
+  async updateCard(columnId: number, cardId: number, data: {title: string, description: string, order: number}): Promise<TSuccessResponse<TCard>> {
+    return await axiosClient.patch('/kanban/update_card', {title: data.title, description: data.description, order: data.order}, {
+      params: {
+        column_id: columnId,
+        card_id: cardId
+      }
+    })
+  }
+
+  async deleteCard(columnId: number, cardId: number): Promise<TSuccessResponse<TCard>> {
+    return await axiosClient.delete('/kanban/delete_card', {
+      params: {
+        column_id: columnId,
+        card_id: cardId
+      }
+    })
   }
 }
 

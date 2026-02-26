@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function getImageUrl(url: string) {
+export function getImageUrl(url?: string | null) {
   return `http://127.0.0.1:8000/${url}`
 }
 
