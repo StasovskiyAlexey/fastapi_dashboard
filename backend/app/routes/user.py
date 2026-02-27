@@ -8,7 +8,7 @@ from ..schemas.response import SuccessResponse
 from ..schemas.user import UserCreate, UserLogin, UserPasswordRequest, UserResponse, UserUpdate, UsersListResponse
 import os
 
-router = APIRouter(prefix='/users', tags=['Users'])
+router = APIRouter(prefix='/api/v1/users', tags=['Users'])
 
 @router.get('/me', response_model=SuccessResponse[UserResponse])
 async def me(user: User = Depends(get_current_user)):

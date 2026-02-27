@@ -13,6 +13,12 @@ export type TUpdateUser = {
   avatarUrl?: string | null | undefined
 }
 
+export type TUpdateUserAvatar = {
+  login?: string
+  email?: string
+  avatarUrl?: File | null
+}
+
 export type TUserRegister = Pick<NonNullable<TUser>, 'login' | 'email'> & {
   password: string
 }

@@ -1,9 +1,9 @@
 import { axiosClient } from "@/api/client";
 import type { TSuccessResponse } from "@/types/response";
-import type { TUpdateUser, TUpdateUserPassword, TUser } from "@/types/user";
+import type { TUpdateUserAvatar, TUpdateUserPassword, TUser } from "@/types/user";
 
 class UserService {
-  async updateUserData(data: TUpdateUser): Promise<TSuccessResponse<TUser>> {
+  async updateUserData(data: TUpdateUserAvatar): Promise<TSuccessResponse<TUser>> {
     const fd = new FormData()
 
     if (data.login) fd.append('login', data.login)

@@ -6,7 +6,7 @@ from ..dependencies.kanban import get_kanban_service
 from ..schemas.response import SuccessResponse
 from ..schemas.kanban import BoardCreate, BoardResponse, BoardUpdate, ColumnResponse, ColumnCreate, ColumnUpdate, ColumnOrdersUpdateList, CardResponse, CardCreate, CardUpdate, ColumnOrderUpdate
 
-router = APIRouter(prefix='/kanban', tags=['Kanban'])
+router = APIRouter(prefix='/api/v1/kanban', tags=['Kanban'])
 
 @router.get('/get_boards', response_model=SuccessResponse[list[BoardResponse]])
 async def get_boards(user: User = Depends(get_current_user), service: KanbanService = Depends(get_kanban_service)):

@@ -9,9 +9,10 @@ services:
     depends_on:
       - frontend
       - backend
+
   db:
     image: postgres:17
-    container_name: fastapi_db
+    container_name: dashboard_db
     env_file: .env
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -20,19 +21,16 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: fastapi_app
+    container_name: dashboard_backend
     env_file: .env
-    volumes:
-      - ./backend:/app # Твой код на компе синхронизируется с /app в контейнере
     depends_on:
       - db
-    # Порты наружу не выставляем, к ним пойдет Nginx внутри сети
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: react_app
+    container_name: dashboard_frontend
     env_file: .env
     depends_on:
       - backend

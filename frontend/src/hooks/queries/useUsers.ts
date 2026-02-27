@@ -1,6 +1,6 @@
 import { useAuth } from "@/providers/AuthProvider"
 import { userService } from "@/services/user.service"
-import type { TUpdateUser, TUpdateUserPassword } from "@/types/user"
+import type { TUpdateUserAvatar, TUpdateUserPassword } from "@/types/user"
 import { useMutation } from "@tanstack/react-query"
 import { AxiosError } from "axios"
 import { toast } from "sonner"
@@ -21,7 +21,7 @@ export const useUsers = () => {
   })
 
   const updateUserData = useMutation({
-    mutationFn: (data: TUpdateUser) => userService.updateUserData(data),
+    mutationFn: (data: TUpdateUserAvatar) => userService.updateUserData(data),
     onSuccess: (data) => {
       console.log(data)
       toast.success(data.message)

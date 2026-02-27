@@ -42,7 +42,7 @@ function Settings() {
     await updateUserData({
       login: userData?.login,
       email: userData.email,
-      avatarUrl: userData.avatarUrl
+      avatarUrl: null
     })
     console.log(userData)
   }
