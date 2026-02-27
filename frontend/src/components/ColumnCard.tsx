@@ -22,13 +22,11 @@ function ColumnCard({column, boardId, columnId}: {column: TColumn, boardId: numb
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    height: 'max-content',
-    maxHeight: '100%',
     transition,
   };
   
   return (
-    <div ref={setNodeRef} style={style} className="w-80 shrink-0 flex flex-col bg-slate-100 rounded-xl max-h-full border border-slate-200 shadow-sm">
+    <div ref={setNodeRef} style={style} className="w-80 shrink-0 flex max-h-180 h-max flex-col bg-slate-100 rounded-xl border border-slate-200 shadow-sm">
       <div className="p-4 flex justify-between items-center group">
         <div className="flex items-center gap-2">
           <div {...attributes} {...listeners} >

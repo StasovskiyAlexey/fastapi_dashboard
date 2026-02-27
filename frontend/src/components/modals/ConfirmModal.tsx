@@ -31,12 +31,12 @@ export default function ConfirmModal() {
         </AlertDialogHeader>
         
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={() => switcher('isOpenConfirmModal', false)} asChild>
-             <Button variant="outline">Відмінити</Button>
+          <AlertDialogCancel className="text-white" onClick={() => switcher('isOpenConfirmModal', false)} asChild>
+             <Button className="bg-red-500 hover:bg-red-700 hover:text-white">Відмінити</Button>
           </AlertDialogCancel>
           
           <AlertDialogAction onClick={() => handleConfirm()} asChild>
-             <Button variant="default">{label ?? ''}</Button>
+             <Button className="bg-green-500 hover:bg-green-600">{label ?? ''}</Button>
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

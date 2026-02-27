@@ -93,8 +93,8 @@ class KanbanService {
     })
   }
 
-  async createCard(columnId: number, data: {title: string, description: string, order: number}): Promise<TSuccessResponse<TCard>> {
-    return await axiosClient.post('/kanban/create_card', {title: data.title, description: data.description, order: data.order}, {
+  async createCard(columnId: number, data: {title: string, description: string}): Promise<TSuccessResponse<TCard>> {
+    return await axiosClient.post('/kanban/create_card', {title: data.title, description: data.description}, {
       params: {
         column_id: columnId
       }

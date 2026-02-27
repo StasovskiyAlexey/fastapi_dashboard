@@ -14,7 +14,6 @@ class CardBase(BaseModel):
 class CardCreate(BaseModel):
   title: str = Field(...)
   description: str = Field(...)
-  order: int = Field(..., ge=1)
 
 class CardUpdate(CardCreate):
   title: str = Field(...)

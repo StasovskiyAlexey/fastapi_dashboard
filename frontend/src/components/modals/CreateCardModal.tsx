@@ -21,7 +21,7 @@ export default function CreateCardModal() {
 
   function handleCreateCard(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    createCard({data: {title: card.title, description: card.description, order: 1}, columnId})
+    createCard({data: {title: card.title, description: card.description}, columnId})
     switcher('isOpenCreateCard', false)
   }
 

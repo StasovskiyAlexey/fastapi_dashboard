@@ -23,7 +23,6 @@ export const Sidebar = () => {
 
   return (
     <aside className="flex w-75 fixed border-r bg-card overflow-y-auto h-screen flex-col border-slate-200 p-4 shadow-sm">
-      {/* 1. Логотип FastAPI */}
       <div className="mb-8 flex items-center gap-3 px-2 py-4">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/10 shadow-inner">
           <img
@@ -37,7 +36,6 @@ export const Sidebar = () => {
         </span>
       </div>
 
-      {/* 2. Основний список навігації */}
       <nav className="flex-1">
         <ul className="space-y-1">
           {menuItems.map((item) => (

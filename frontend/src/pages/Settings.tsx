@@ -19,7 +19,7 @@ function Settings() {
   const {user, loading} = useAuth()
   const navigate = useNavigate()
 
-  const {switcher} = useModalStore()
+  const switcher = useModalStore((state) => state.switcher)
   const {updateUserPassword, deleteUser, updateUserData} = useUsers()
 
   const userDefaultObj: {id?: number, login?: string, email?: string, password?: string, newPassword?: string, avatarUrl?: string | null} = {
@@ -49,7 +49,7 @@ function Settings() {
   
   const updatePassword = async () => {
     await updateUserPassword({password: userData.password, newPassword: userData.newPassword})
-    setUserData(userDefaultObj)
+    setUserData((state) => ({...state, password: '', newPassword: ''}))
   }
 
   const deleteUserAccount = async () => {
@@ -121,7 +121,7 @@ function Settings() {
               <Label htmlFor="new-password">Новий пароль</Label>
               <Input value={userData.newPassword || ''} onChange={(e) => setUserData((prevState) => ({...prevState, newPassword: e.target.value}))} placeholder="Введіть новий пароль" id="new-password" type="password" />
             </div>
-            <Button onClick={updatePassword} disabled={!userData.password || !userData.newPassword} variant="outline" className="w-fit">Змінити пароль</Button>
+            <Button onClick={() => switcher('isOpenConfirmModal', true, {confirmLabel: 'Змінити пароль', action: updatePassword})} disabled={!userData.password || !userData.newPassword} variant="outline" className="w-fit">Змінити пароль</Button>
           </div>
         </div>
 

@@ -24,7 +24,7 @@ export const useCard = (columnId?: number, cardId?: number) => {
 
 export const useCardMutations = () => {
   const createMutation = useMutation({
-    mutationFn: ({ columnId, data }: { columnId: number, data: { title: string, description: string, order: number } }) => 
+    mutationFn: ({ columnId, data }: { columnId: number, data: { title: string, description: string} }) => 
       kanbanService.createCard(columnId, data),
     onSuccess: (data, variables) => {
       toast.success(data.message);

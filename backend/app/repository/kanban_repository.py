@@ -84,16 +84,11 @@ class KanbanRepository:
   
   
   async def create_column(self, column: ColumnCreate):
-    
-    # Тут делаем фильтрацию по максимальному количеству order, чтобы новые карточки добавлять в конец
     query = select(Column).filter_by(board_id=column.board_id).order_by(Column.order.desc()).limit(1)
     columns = await self.db.execute(query)
-    column_with_high_order = columns.scalars().first()
+    last_order = columns.scalars().first()
 
-    if column_with_high_order is None:
-      order = 1
-    else:
-      order = column_with_high_order.order + 1
+    order = (last_order.order + 1) if last_order is not None else 1
 
     new_column = Column(title=column.title, board_id=column.board_id, order=order)
     self.db.add(new_column)
@@ -172,7 +167,13 @@ class KanbanRepository:
   
   
   async def create_card(self, card: CardCreate, column_id: int, creator_id: int):
-    new_card = Card(title=card.title, description=card.description, column_id=column_id, order=card.order, creator_id=creator_id)
+    query = select(Card).filter_by(column_id=column_id, creator_id=creator_id).order_by(Card.order.desc()).limit(1)
+    entities = await self.db.execute(query)
+    last_order = entities.scalars().first()
+
+    order = (last_order.order + 1) if last_order is not None else 1
+    
+    new_card = Card(title=card.title, description=card.description, column_id=column_id, order=order, creator_id=creator_id)
     self.db.add(new_card)
     
     try:
@@ -191,11 +192,9 @@ class KanbanRepository:
     if exist_card is None:
       raise AppError(400, 'Картки не знайдено')
     
-    # Если мы хотим, чтобы только создатель мог править (если юзер передан)
     if user_id is not None:
       if exist_card.creator_id != user_id:
         raise AppError(403, 'Ви не можете редагувати чужу картку')
-    # Если юзер НЕ передан (None), карточка обновится без проверки прав
     
     updated_data = card_update.model_dump(exclude_unset=False)
     
