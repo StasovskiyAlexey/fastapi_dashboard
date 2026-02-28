@@ -56,7 +56,7 @@
 `make up`
 
 // После поднятия контейнера должны увидеть данные в терминале<br>
-<img width="665" height="439" alt="image" src="https://github.com/user-attachments/assets/047c30af-7130-4622-85ee-27f62b0ad733" />
+<img width="1920" height="953" alt="image" src="https://github.com/user-attachments/assets/e407daa7-8d2d-4863-b0c2-ba85853b2006" />
 
 // Проверка запущеного nginx сервер<br>
 `localhost(Фронтенд)`<br>
