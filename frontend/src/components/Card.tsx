@@ -1,14 +1,14 @@
 import { getImageUrl, parseData } from '@/lib/utils'
-import { useAuth } from '@/providers/AuthProvider'
 import type { TCard } from '@/types/kanban'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import useModalStore from '@/store/modal.store'
 import { useCardMutations } from '@/hooks/queries/useCards'
 import { Calendar, Trash2 } from 'lucide-react'
 import { Button } from './ui/button'
+import { useCheckAuth } from '@/hooks/queries/useAuth'
 
 export default function Card({card, columnId}: {card: TCard, columnId: number}) {
-  const {user} = useAuth()
+  const {data: user} = useCheckAuth()
   const switcher = useModalStore((state) => state.switcher)
   const {deleteCard} = useCardMutations()
 

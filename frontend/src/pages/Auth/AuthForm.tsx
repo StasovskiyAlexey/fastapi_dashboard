@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { useAuth } from '@/providers/AuthProvider'
 import { useForm, type FieldValues, type SubmitHandler } from 'react-hook-form'
 
 function AuthForm({tab, handler, inputs}: {
@@ -18,8 +17,6 @@ function AuthForm({tab, handler, inputs}: {
 		handleSubmit,
 		formState: { errors }
 	} = useForm()
-
-	const { loading } = useAuth()
 
 	return (
 		<form
@@ -47,7 +44,6 @@ function AuthForm({tab, handler, inputs}: {
 			))}
 			<Button
 				type='submit'
-				disabled={loading}
 				className='w-full h-11 text-white font-semibold rounded-lg shadow-lg shadow-purple-200 transition-all hover:scale-[1.02] active:scale-[0.98]'>
 				{tab === 'login' ? 'Увійти до аккаунту' : 'Створити профіль'}
 			</Button>

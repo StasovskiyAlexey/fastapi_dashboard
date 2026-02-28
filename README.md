@@ -8,8 +8,7 @@
 
 1. ### ⭐ Активация приложения(Linux)
 
-// Создаем переменные окружения в проекте
-`POSTGRES_USER=postgres`<br>
+// Создаем переменные окружения в проекте<br>
 `POSTGRES_PASSWORD=postgres`<br>
 `POSTGRES_DB=fastapi_db`<br>
 `DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/fastapi_db`<br>
@@ -68,19 +67,25 @@
 
 ---
 
-2. ### 🗄 Работа с данными:
+2. ### 🗄 Функционал проекта:
 
-**Миграции**: Управление схемой базы данных через Alembic. Это позволяет безопасно обновлять структуру таблиц без потери данных.<br>
-**Асинхронный драйве**р: Использование asyncpg обеспечивает максимальную пропускную способность при работе с PostgreSQL.<br>
-**ORM**: Современный синтаксис SQLAlchemy 2.0 с поддержкой асинхронных сессий.
+Полноценная Kanban-доска<br>
+Я разработал функциональный аналог **Trello**, который позволяет эффективно управлять задачами с помощью визуального интерфейса:
+
+* **Drag-and-Drop:** интуитивное перемещение карточек между колонками для быстрого изменения статусов задач.
+* **Гибкая архитектура:** Создание собственных досок, колонок и управление приоритетами карточек.
+* **User Management:** Полноценная авторизация, редактирование профиля, изменение аватаров и паролей.
+* **High Performance:** Оптимизированная работа с серверным состоянием через TanStack Query для мгновенного обновления интерфейса без лишних перегрузок страницы.
 
 ---
 
 3. ### 📄 Стек приложения
 
-**Back-End**:<br> FastAPI, SQLAlchemy 2.0 (Async), Alembic, Pydantic v2, Uvicorn<br><br>
-**Front-End**:<br> React 19, TypeScript, Tanstack Router, Zustand, React-Hook-Form<br><br>
-**UI/UX**: <br>Tailwind CSS 4, shadcn/ui, Lucide Icons<br><br>
-**Security**: <br>JWT (OAuth2), Passlib (bcrypt), ECDSA<br><br>
-**DevOps**:	<br>Docker, Docker Compose, Nginx
+| Модуль | Технологии |
+| :--- | :--- |
+| **Back-End** | FastAPI, SQLAlchemy 2.0 (Async), Alembic, Pydantic v2, Uvicorn |
+| **Front-End** | React 19, TypeScript, Tanstack Router, Zustand, React-Hook-Form |
+| **UI/UX** | Tailwind CSS 4, shadcn/ui, Lucide Icons |
+| **Security** | JWT (OAuth2), Passlib (bcrypt), HTTP-only Cookies |
+| **DevOps** | Docker, Docker Compose, Nginx (Reverse Proxy) |
 

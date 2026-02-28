@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
 
 			toast.success(res.message)
 
-			navigate({ to: '/' })
+			navigate({ to: '/', replace: true })
 		} catch (e) {
 			if (e instanceof AxiosError) {
 				toast.error(e.response?.data.detail)
@@ -52,6 +52,7 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
 			}
 			return res?.data
 		} catch (e) {
+			setUser(null)
 			console.log(e)
 		} finally {
 			setLoading(false)
@@ -67,7 +68,7 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
 			await router.invalidate()
 
 			toast.success('Аккаунт успішно зареєстровано')
-			navigate({ to: '/' })
+			navigate({ to: '/', replace: true})
 		} catch (e) {
 			if (e instanceof AxiosError) {
 				toast.error(e.response?.data.detail)
@@ -81,8 +82,7 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
 		setLoading(true)
 		try {
 			const res = await authService.logout()
-			console.log(res)
-			
+
 			setUser(null)
 			await router.invalidate()
 
@@ -104,7 +104,6 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
 
 	return <AuthContext.Provider value={{ login, me, register, logout, loading, user, setUser }}>{children}</AuthContext.Provider>
 }
-
 
 export const useAuth = () => {
 	const context = useContext(AuthContext)

@@ -1,35 +1,29 @@
 import { createRouter, RouterProvider } from '@tanstack/react-router'
-import { AuthProvider } from './providers/AuthProvider'
 import { routeTree } from './routeTree.gen'
+import ScreenLoader from './components/ScreenLoader'
+import { useCheckAuth } from './hooks/queries/useAuth'
 import { authService } from './services/auth.service'
-import { QueryClientProvider } from '@tanstack/react-query'
-import { queryClient } from './lib/query-client'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 const router = createRouter({
 	routeTree,
 	context: {
+		user: null,
 		service: authService
 	}
 })
 
-function RouterComponent() {
+function App() {
+	const {data: user, isLoading} = useCheckAuth()
+
+	if (isLoading)  {
+		return <ScreenLoader/>
+	}
+
 	return (
 		<RouterProvider
 			router={router}
-			context={{ service: authService }}
+			context={{ user }}
 		/>
-	)
-}
-
-function App() {
-	return (
-		<QueryClientProvider client={queryClient}>
-			<ReactQueryDevtools initialIsOpen={false} />
-			<AuthProvider>
-				<RouterComponent />
-			</AuthProvider>
-		</QueryClientProvider>
 	)
 }
 

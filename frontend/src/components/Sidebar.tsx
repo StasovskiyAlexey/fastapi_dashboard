@@ -4,25 +4,22 @@ import {
   ChevronRight,
   LayoutDashboard
 } from 'lucide-react';
-import { useAuth } from '@/providers/AuthProvider';
 import { Link } from '@tanstack/react-router';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { getImageUrl } from '@/lib/utils';
+import { useAuthMutations, useCheckAuth } from '@/hooks/queries/useAuth';
 
 export const Sidebar = () => {
-  const { logout, user } = useAuth();
+  const {logout} = useAuthMutations()
+  const {data: user} = useCheckAuth()
 
   const menuItems = [
-    { icon: Settings, label: 'Налаштування', href: '/settings' },
+    { icon: Settings, label: 'Налаштування', href: '/' },
     { icon: LayoutDashboard, label: 'Дошки', href: '/boards' },
   ];
 
-  if (!user) {
-    return null
-  }
-
   return (
-    <aside className="flex w-75 fixed border-r bg-card overflow-y-auto h-screen flex-col border-slate-200 p-4 shadow-sm">
+    <aside className="flex w-75 border-r bg-card overflow-y-auto h-screen flex-col border-slate-200 p-4 shadow-sm">
       <div className="mb-8 flex items-center gap-3 px-2 py-4">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/10 shadow-inner">
           <img
@@ -99,7 +96,7 @@ export const Sidebar = () => {
         </div>
         
         <button
-          onClick={logout}
+          onClick={() => logout()}
           className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-red-500 transition-colors hover:bg-red-50"
         >
           <LogOut className="h-5 w-5" />

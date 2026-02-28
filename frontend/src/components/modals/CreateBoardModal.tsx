@@ -6,7 +6,7 @@ import { Button } from '../ui/button'
 import useModalStore from '@/store/modal.store'
 import { useBoardMutations } from '@/hooks/queries/useBoards'
 import { useEffect, useState, type FormEvent } from 'react'
-import { useAuth } from '@/providers/AuthProvider'
+import { useCheckAuth } from '@/hooks/queries/useAuth'
 
 export default function CreateBoardModal() {
   const [board, setBoard] = useState<{title: string}>({
@@ -14,7 +14,7 @@ export default function CreateBoardModal() {
   })
   
   const {modals, switcher} = useModalStore()
-  const {user} = useAuth()
+  const {data: user} = useCheckAuth()
   const {createBoard} = useBoardMutations()
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {

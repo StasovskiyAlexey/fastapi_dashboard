@@ -4,12 +4,12 @@ import Boards from '@/pages/Board/Boards'
 export const Route = createFileRoute('/boards/')({
   beforeLoad: async ({context}) => {
     const user = await context.service.me()
-      if (!user) {
-        throw redirect({
-          to: '/',
-          replace: true
-        })
-      }
+    if (!user) {
+      throw redirect({
+        to: '/',
+        replace: true
+      })
+    }
   },
   component: Boards,
 })

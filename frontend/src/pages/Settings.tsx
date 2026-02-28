@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
-import { useAuth } from "@/providers/AuthProvider"
 import { useNavigate } from "@tanstack/react-router"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { lazy, Suspense, useEffect, useState } from "react"
@@ -11,16 +10,17 @@ import { Plus } from "lucide-react"
 import { getImageUrl } from "@/lib/utils"
 import useModalStore from "@/store/modal.store"
 import { useUsers } from "@/hooks/queries/useUsers"
+import { useCheckAuth } from "@/hooks/queries/useAuth"
 
 const UpdateUserAvatarModal = lazy(() => import('@/components/modals/UpdateUserAvatarModal'))
 const ConfirmModal = lazy(() => import('@/components/modals/ConfirmModal'))
 
 function Settings() {
-  const {user, loading} = useAuth()
   const navigate = useNavigate()
-
   const switcher = useModalStore((state) => state.switcher)
+  
   const {updateUserPassword, deleteUser, updateUserData} = useUsers()
+  const {data: user, isLoading} = useCheckAuth()
 
   const userDefaultObj: {id?: number, login?: string, email?: string, password?: string, newPassword?: string, avatarUrl?: string | null} = {
     id: user?.id,
@@ -44,7 +44,6 @@ function Settings() {
       email: userData.email,
       avatarUrl: null
     })
-    console.log(userData)
   }
   
   const updatePassword = async () => {
@@ -60,7 +59,7 @@ function Settings() {
     })
   }
 
-  if (loading) {
+  if (isLoading) {
     return <ScreenLoader/>
   }
 

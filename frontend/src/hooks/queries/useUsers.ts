@@ -1,4 +1,3 @@
-import { useAuth } from "@/providers/AuthProvider"
 import { userService } from "@/services/user.service"
 import type { TUpdateUserAvatar, TUpdateUserPassword } from "@/types/user"
 import { useMutation } from "@tanstack/react-query"
@@ -6,8 +5,6 @@ import { AxiosError } from "axios"
 import { toast } from "sonner"
 
 export const useUsers = () => {
-  const {setUser} = useAuth()
-  
   const updateUserPassword = useMutation({
     mutationFn: (data: TUpdateUserPassword) => userService.updatePassword({password: data.password, newPassword: data.newPassword}),
     onSuccess: (data) => {
@@ -25,7 +22,6 @@ export const useUsers = () => {
     onSuccess: (data) => {
       console.log(data)
       toast.success(data.message)
-      setUser(data.data)
       return data.data
     },
     onError: (error) => {
@@ -40,7 +36,6 @@ export const useUsers = () => {
     mutationFn: (data: {avatarUrl?: File | null}) => userService.updateUserAvatar(data.avatarUrl),
     onSuccess: (data) => {
       toast.success(data.message)
-      setUser(data.data)
       return data
     },
     onError: (error) => {
@@ -55,7 +50,6 @@ export const useUsers = () => {
     onSuccess: (data) => {
       console.log(data)
       toast.success(data.message)
-      setUser(null)
     },
     onError: (error) => {
       console.log(error)

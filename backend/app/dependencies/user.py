@@ -14,7 +14,7 @@ async def get_current_user(request: Request, db: AsyncSession = Depends(get_db))
   token = get_token(request)
   print(token)
   if not token:
-    raise AppError(401, 'Пользователь не авторизован')
+    raise AppError(401, 'Користувач не авторизований')
   
   payload = decode_token(token)
   
@@ -22,7 +22,7 @@ async def get_current_user(request: Request, db: AsyncSession = Depends(get_db))
   user = await db.get(User, user_id)
 
   if not user:
-    raise AppError(401, "Пользователь не найден")
+    raise AppError(401, "Користувач не знайдений")
 
   return user
 

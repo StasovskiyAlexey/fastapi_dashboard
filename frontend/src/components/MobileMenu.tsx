@@ -5,7 +5,6 @@ import {
   LayoutDashboard,
   Menu
 } from 'lucide-react';
-import { useAuth } from '@/providers/AuthProvider';
 import { Link } from '@tanstack/react-router';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getImageUrl } from '@/lib/utils';
@@ -18,18 +17,16 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { useAuthMutations, useCheckAuth } from '@/hooks/queries/useAuth';
 
 export default function MobileMenu() {
-  const { logout, user } = useAuth();
+  const { logout } = useAuthMutations();
+  const {data: user} = useCheckAuth()
 
   const menuItems = [
     { icon: Settings, label: 'Налаштування', href: '/settings' },
     { icon: LayoutDashboard, label: 'Дошки', href: '/boards' },
   ];
-
-  if (!user) {
-    return null;
-  }
 
   return (
     <Drawer direction="left">
@@ -117,7 +114,7 @@ export default function MobileMenu() {
           </div>
           
           <button
-            onClick={logout}
+            onClick={() => logout()}
             className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-red-500 transition-colors hover:bg-red-50"
           >
             <LogOut className="h-5 w-5" />
