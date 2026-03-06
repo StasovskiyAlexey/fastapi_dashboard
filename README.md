@@ -2,6 +2,9 @@
 
 ### Интерактивный дашборд на стеке FastAPI + React, упакованный в Docker и оптимизированный для работы в среде Linux/WSL2.
 
+<img width="1920" height="953" alt="screencapture-127-0-0-1-5173-boards-2026-03-07-00_29_58" src="https://github.com/user-attachments/assets/915aab13-0acd-4321-b183-17df92f14edc" />
+<img width="1920" height="953" alt="screencapture-127-0-0-1-5173-boards-1-2026-03-07-00_26_20" src="https://github.com/user-attachments/assets/73f42969-72db-4846-9afc-ba9861a4c302" />
+
 ---
 
 1. ### ⭐ Активация приложения(Linux)
@@ -44,6 +47,7 @@
 
 // Билдим приложение<br>
 `make build`
+
 
 // Применяем миграции<br>
 `docker exec -it fastapi_app alembic upgrade head`
