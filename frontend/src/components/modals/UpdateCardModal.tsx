@@ -102,7 +102,7 @@ export default function UpdateCardModal() {
               Скасувати
             </Button>
             <Button
-              disabled={!card.title?.length || !card.description?.length}
+              disabled={!card.title?.length}
               type="submit"
               className="rounded-xl bg-violet-600 px-6 text-white hover:bg-violet-700 shadow-lg shadow-violet-200 active:scale-95 transition-all"
             >

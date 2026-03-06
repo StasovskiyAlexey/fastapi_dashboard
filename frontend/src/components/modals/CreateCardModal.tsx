@@ -18,10 +18,11 @@ export default function CreateCardModal() {
   const {createCard} = useCardMutations()
 
   const columnId = modals.isOpenCreateCard.data?.columnId
+  const boardId = modals.isOpenCreateCard.data?.boardId
 
   function handleCreateCard(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    createCard({data: {title: card.title, description: card.description}, columnId})
+    createCard({boardId, data: {title: card.title, description: card.description}, columnId})
     switcher('isOpenCreateCard', false)
   }
 
@@ -102,7 +103,7 @@ export default function CreateCardModal() {
               Скасувати
             </Button>
             <Button
-              disabled={!card.title.length || !card.description.length}
+              disabled={!card.title.length}
               type="submit"
               className="rounded-xl bg-blue-600 px-6 text-white hover:bg-blue-700 shadow-lg shadow-blue-200 active:scale-95 transition-all"
             >

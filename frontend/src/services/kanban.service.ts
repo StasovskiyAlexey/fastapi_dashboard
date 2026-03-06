@@ -62,8 +62,8 @@ class KanbanService {
     })
   }
 
-  async update_columns_orders(boardId: number, columnData: {id: number, order: number}[]): Promise<TSuccessResponse<TColumn>> {
-    return await axiosClient.patch('/kanban/update_order_columns', {columns: columnData}, {
+  async reorderColumns(boardId: number, columns: TColumn[]): Promise<TSuccessResponse<TColumn[]>> {
+    return await axiosClient.patch('/kanban/update_order_columns', {columns: columns}, {
       params: {
         board_id: boardId
       }
@@ -106,6 +106,17 @@ class KanbanService {
       params: {
         column_id: columnId,
         card_id: cardId
+      }
+    })
+  }
+
+  async reordersCards({columnId, newColumnId, cardId, newOrder}: {columnId: number, newColumnId: number, cardId: number, newOrder: number}): Promise<TSuccessResponse<null>> {
+    return await axiosClient.patch('/kanban/reorder_cards', {}, {
+      params: {
+        column_id: columnId, 
+        new_column_id: newColumnId, 
+        card_id: cardId, 
+        new_order: newOrder
       }
     })
   }

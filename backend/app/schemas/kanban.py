@@ -31,9 +31,14 @@ class CardResponse(BaseModel):
   created_at: datetime
   
   model_config = ConfigDict(from_attributes=True)
-  
-class CardListResponse(BaseModel):
-  cards: list[CardResponse]
+
+class CardUpdateItem(BaseModel):  
+  id: int
+  order: int
+  column_id: int
+
+class CardListUpdate(BaseModel):
+  cards: List[CardUpdateItem]
 
 class ColumnBase(BaseModel):
   title: str = Field(...)
@@ -68,7 +73,11 @@ class ColumnResponse(BaseModel):
 
 class ColumnOrderUpdate(BaseModel):
   id: int
-  order: int
+  title: str = Field(...)
+  board_id: int = Field(...)
+  order: int = Field(...)
+  cards: list
+  created_at: datetime
   
 class ColumnOrdersUpdateList(BaseModel):
   columns: List[ColumnOrderUpdate]

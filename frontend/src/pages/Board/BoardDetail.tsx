@@ -2,56 +2,58 @@ import ColumnCard from "@/components/ColumnCard";
 import ScreenLoader from "@/components/ScreenLoader";
 import { Button } from "@/components/ui/button";
 import { useBoard } from "@/hooks/queries/useBoards";
-import { useColumnMutations, useColumnsList } from "@/hooks/queries/useColumns";
+import { useColumnMutations } from "@/hooks/queries/useColumns";
 import useModalStore from "@/store/modal.store";
 import { useParams, useRouter } from "@tanstack/react-router";
 import { MoveLeft, Plus } from "lucide-react";
-
-import { DndContext, DragOverlay } from "@dnd-kit/core";
-import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { queryClient } from "@/lib/query-client";
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense } from "react";
 
 const CreateCardModal = lazy(() => import('@/components/modals/CreateCardModal'))
 const CreateColumnModal = lazy(() => import('@/components/modals/CreateColumnModal'))
 const UpdateCardModal = lazy(() => import('@/components/modals/UpdateCardModal'))
 const UpdateColumnModal = lazy(() => import('@/components/modals/UpdateColumnModal'))
 
+import {DragDropContext, Droppable} from '@hello-pangea/dnd'
+import type { TColumn } from "@/types/kanban";
+import { useCardMutations } from "@/hooks/queries/useCards";
+
 export default function BoardDetail() {
   const boardId = parseInt(useParams({strict: false}).boardId)
-  const [activeId, setActiveId] = useState<number>(0)
-
-  const switcher = useModalStore((state) => state.switcher)
   const router = useRouter()
 
-  const {data: board} = useBoard(boardId)
-  const {data: columns, isLoading} = useColumnsList(boardId)
-  const {updateOrdersColumns} = useColumnMutations()
+  const switcher = useModalStore((state) => state.switcher)
   
+  const {data: board, isLoading, isFetching} = useBoard(boardId)
+  const {reorderColumns} = useColumnMutations()
+  const {reordersCards} = useCardMutations()
+
   if (isLoading) {
     return <ScreenLoader/>
   }
 
-  function handleDragEnd(event: any) {
-    const { active, over } = event;
+  async function handleDragEnd(result: any) {
+    const { destination, source } = result;
+    console.log(result)
 
-    if (active) {
-      setActiveId(active.id)
+    if (!destination) return
+
+    if (result.type === 'column') {
+      const newColumns = [...board?.columns as TColumn[]]
+      const [moved] = newColumns.splice(source.index, 1)
+      newColumns.splice(destination.index, 0, moved)
+
+      reorderColumns({boardId, columns: newColumns})
     }
 
-    if (!over) return;
+    if (result.type === 'card') {
+      const cardId = Number(result.draggableId.slice(5))
+      const firstColumnId = Number(source.droppableId.slice(7))
+      const secondColumnId = Number(destination.droppableId.slice(7))
+      const newOrder = Number(destination.index + 1)
 
-    if (active.id !== over.id && columns) {
-      const oldIndex = columns?.findIndex(col => col?.id === active.id);
-      const newIndex = columns?.findIndex(col => col?.id === over.id);
-
-      if (oldIndex === -1 || newIndex === -1) return
-
-      const newColumns = arrayMove(columns, oldIndex, newIndex).map(col => ({id: col!.id, order: col!.order}))
-      updateOrdersColumns({boardId, columns: newColumns})
-
-      queryClient.setQueryData(['columns-list', boardId], newColumns)
+      reordersCards({columnId: firstColumnId, newColumnId: secondColumnId, cardId, newOrder})
     }
+    
   }
 
   return (
@@ -85,26 +87,26 @@ export default function BoardDetail() {
             </Button>
           </div>
         </header>
-
-        <DndContext onDragEnd={handleDragEnd}>
-          <SortableContext items={columns?.map(el => el?.id as number) || []} strategy={verticalListSortingStrategy}>
-            <main className="flex-1 overflow-x-auto py-4 flex gap-6 items-start">
-              {columns?.length === 0 && `У дошці ${board?.title} немає активних колонок...`}
-              {columns?.length !== 0 && columns?.map((column) => (
-                <ColumnCard
-                  column={column}
-                  key={column?.id}
-                  columnId={column?.id as number}
-                  boardId={boardId}
-                />
-              ))}
-
-              <DragOverlay>
-                {activeId && <ColumnCard column={columns?.find(col => col?.id === activeId)} columnId={activeId} boardId={boardId}/>}
-              </DragOverlay>
-            </main>
-          </SortableContext>
-        </DndContext>
+          <DragDropContext onDragEnd={handleDragEnd}>
+            <span className="mt-4">{board?.columns?.length === 0 && `У дошці ${board?.title} немає активних колонок...`}</span>
+            <Droppable type="column" direction="horizontal" droppableId="columns">
+              {(provided) => (
+                <main ref={provided.innerRef} {...provided.droppableProps} className="flex-1 overflow-x-auto py-4 flex gap-6 items-start">
+                  {isFetching && <ScreenLoader/>}
+                  {board?.columns?.map((column, index) => (
+                    <ColumnCard
+                      column={column}
+                      key={column?.id}
+                      columnId={column?.id as number}
+                      boardId={boardId}
+                      index={index}
+                    />
+                  ))}
+                  {provided.placeholder}
+                </main>
+              )}
+            </Droppable>
+          </DragDropContext>
       </div>
 
       <Suspense fallback={<ScreenLoader/>}>

@@ -23,7 +23,7 @@ class Column(Base):
   board_id: Mapped[int] = mapped_column(ForeignKey('boards.id', ondelete="CASCADE"))
   board: Mapped['Board'] = relationship('Board', back_populates='columns')
   order: Mapped[int] = mapped_column(default=1)
-  cards: Mapped[List["Card"]] = relationship(back_populates="column", cascade='all, delete-orphan')
+  cards: Mapped[List["Card"]] = relationship(back_populates="column", cascade='all, delete-orphan', order_by="Card.order")
   
   created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
   

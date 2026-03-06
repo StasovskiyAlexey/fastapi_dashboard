@@ -1,34 +1,19 @@
 import { queryClient } from "@/lib/query-client"
 import { kanbanService } from "@/services/kanban.service"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation } from "@tanstack/react-query"
+import { useParams } from "@tanstack/react-router";
 import { AxiosError } from "axios";
 import { toast } from "sonner"
 
-export const useCardsList = (boardId?: number, columnId?: number) => {
-  return useQuery({
-    queryKey: ['cards-list', columnId],
-    queryFn: () => kanbanService.getCards(boardId, columnId),
-    enabled: !!boardId && !!columnId,
-    select: (data) => data.data,
-  });
-};
-
-export const useCard = (columnId?: number, cardId?: number) => {
-  return useQuery({
-    queryKey: ['card-item', cardId],
-    queryFn: () => kanbanService.getCard(cardId, columnId),
-    enabled: !!cardId && !!columnId,
-    select: (data) => data.data,
-  });
-};
-
 export const useCardMutations = () => {
+  const boardId = parseInt(useParams({strict: false}).boardId)
+
   const createMutation = useMutation({
-    mutationFn: ({ columnId, data }: { columnId: number, data: { title: string, description: string} }) => 
+    mutationFn: ({columnId, data }: {boardId: number, columnId: number, data: { title: string, description: string} }) => 
       kanbanService.createCard(columnId, data),
-    onSuccess: (data, variables) => {
+    onSuccess: (data) => {
       toast.success(data.message);
-      queryClient.invalidateQueries({ queryKey: ['cards-list', variables.columnId] });
+      queryClient.invalidateQueries({ queryKey: ['board-item', boardId] });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {
@@ -40,10 +25,10 @@ export const useCardMutations = () => {
   const updateMutation = useMutation({
     mutationFn: ({ columnId, cardId, data }: { columnId: number, cardId: number, data: { title: string, description: string, order: number } }) => 
       kanbanService.updateCard(columnId, cardId, data),
-    onSuccess: (data, variables) => {
+    onSuccess: (data) => {
       toast.success(data.message);
-      queryClient.invalidateQueries({ queryKey: ['cards-list', variables.columnId] });
-      queryClient.invalidateQueries({ queryKey: ['card-item', variables.cardId] });
+      queryClient.invalidateQueries({ queryKey: ['board-item', boardId] });
+      queryClient.invalidateQueries({ queryKey: ['board-item', boardId] });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {
@@ -53,12 +38,11 @@ export const useCardMutations = () => {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: ({ columnId, cardId }: { columnId: number, cardId: number }) => 
+    mutationFn: ({columnId, cardId }: { columnId: number, cardId: number }) => 
       kanbanService.deleteCard(columnId, cardId),
-    onSuccess: (data, variables) => {
+    onSuccess: (data) => {
       toast.success(data.message);
-      queryClient.invalidateQueries({ queryKey: ['cards-list', variables.columnId] });
-      queryClient.removeQueries({ queryKey: ['card-item', variables.cardId] });
+      queryClient.invalidateQueries({ queryKey: ['board-item', boardId] });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {
@@ -67,10 +51,25 @@ export const useCardMutations = () => {
     }
   });
 
+  const updateOrdersMutation = useMutation({
+    mutationFn: ({ columnId, newColumnId, cardId, newOrder}: {columnId: number, newColumnId: number, cardId: number, newOrder: number}) => {
+      return kanbanService.reordersCards({columnId, newColumnId, cardId, newOrder})
+    },
+    onSuccess: (_data) => {
+      queryClient.invalidateQueries({queryKey: ['board-item', boardId]})
+    },
+    onError: (error) => {
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data.detail)
+      }
+    },
+  })
+
   return {
     createCard: createMutation.mutate,
     updateCard: updateMutation.mutate,
     deleteCard: deleteMutation.mutate,
-    isPending: createMutation.isPending || updateMutation.isPending || deleteMutation.isPending
+    reordersCards: updateOrdersMutation.mutate,
+    isPending: createMutation.isPending || updateMutation.isPending || deleteMutation.isPending || updateOrdersMutation.isPending
   };
 };

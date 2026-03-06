@@ -1,8 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, update
-from sqlalchemy.orm import selectinload
+from sqlalchemy import select, update, func
+from sqlalchemy.orm import selectinload, joinedload
 from ..models.kanban import Board, Card, Column
-from ..schemas.kanban import BoardCreate, BoardUpdate, ColumnUpdate, CardUpdate, ColumnCreate, CardCreate, ColumnOrdersUpdateList
+from ..schemas.kanban import BoardCreate, BoardUpdate, ColumnUpdate, CardUpdate, ColumnCreate, CardCreate, ColumnOrdersUpdateList, CardListUpdate
 from ..core.utils import update_existing_entity
 from ..core.exceptions import AppError
 
@@ -117,7 +117,7 @@ class KanbanRepository:
     return await update_existing_entity(self, exist_column, 'Помилка під час оновлення колонки')
   
   
-  async def reorder_all_columns(self, board_id: int, user_id: int, data: ColumnOrdersUpdateList):
+  async def reorder_columns(self, board_id: int, user_id: int, data: ColumnOrdersUpdateList):
     exist_board = self.get_board_by_id(user_id, board_id)
     
     if exist_board is None:
@@ -203,7 +203,47 @@ class KanbanRepository:
       
     return await update_existing_entity(self, exist_card, 'Помилка під час оновлення картки')
   
-  
+  async def reorder_cards(self, column_id: int, new_column_id: int, card_id: int, new_order: int):
+    # Открываем соединение с БД(транзакцию)
+    async with self.db.begin():
+      
+      # Создаем запрос и находим карточку по ID
+      card_query = await self.db.execute(select(Card).filter_by(id=card_id))
+      card = card_query.scalar_one_or_none()
+      
+      if card is None:
+        raise AppError(400, 'Такої картки не знайдено')
+      
+      # 1. Если перетаскиваем карточку в новую колонку
+      if column_id != new_column_id:
+      
+        # Уменьшаем порядок у всех карточек в СТАРОЙ колонке, которые стояли ПОСЛЕ перемещаемой
+        await self.db.execute(update(Card).where(Card.column_id == column_id, Card.order > card.order).values(order=Card.order - 1))
+        # Увеличиваем порядок у всех карточек в НОВОЙ колонке, которые стоят на позиции new_order или позже
+        await self.db.execute(update(Card).where(Card.column_id == new_column_id, Card.order >= new_order).values(order=Card.order + 1))
+      
+      # 2. Если перетаскиваем карточку в текущую колонку
+      else:
+        # Если перетаскиваем ВНИЗ (в конец списка)
+        if card.order < new_order:
+          
+          # Здесь находим карточку по ID первой колонки, с условием что порядок карточки больше первой найденой карточки, уменьшаем порядок на один
+          await self.db.execute(update(Card).where(Card.column_id == column_id, Card.order > card.order, Card.order <= new_order).values(order=Card.order - 1))
+          
+        # Если перетаскиваем ВВЕРХ (в начало списка)
+        elif card.order > new_order:
+          
+          # Здесь находим карточку по ID второй колонки, с условием что порядок карточки больше или равно найденой карточки, увеличиваем порядок на один
+          await self.db.execute(update(Card).where(Card.column_id == new_column_id, Card.order >= new_order, Card.order < card.order).values(order=Card.order + 1))
+    
+      # Устанавливаем новые данные в карточку
+      card.column_id = new_column_id
+      card.order = new_order
+      
+      await self.db.flush()
+
+    return card
+
   async def delete_card(self, card: Card):
     try:
       await self.db.delete(card)

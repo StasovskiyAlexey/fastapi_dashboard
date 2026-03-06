@@ -70,7 +70,7 @@ class KanbanService:
     return await self.repository.update_column(column_id, column, board_id)
   
   async def reorder_all_columns(self, board_id, user_id: int, data: ColumnOrdersUpdateList):
-    return await self.repository.reorder_all_columns(board_id, user_id, data)
+    return await self.repository.reorder_columns(board_id, user_id, data)
   
   async def delete_column(self, column_id: int, board_id: int):
     exist_column = await self.repository.get_column_by_id(column_id, board_id)
@@ -88,7 +88,7 @@ class KanbanService:
       raise AppError(400, f'Неможливо створити картку, оскільки немає стовпчика з ID {column_id}')
     
     return await self.repository.get_all_cards(column_id)
-  
+
   async def get_card_by_id(self, card_id: int, column_id: int):
     exist_card = await self.repository.get_card_by_id(card_id, column_id)
     
@@ -112,6 +112,9 @@ class KanbanService:
       raise AppError(400, f'Картки з ID {card_id} не існує')
     
     return await self.repository.update_card(card_id, column_id , card, user_id)
+  
+  async def reorders_cards(self, column_id: int, new_column_id: int, card_id: int, new_order: int):
+    return await self.repository.reorder_cards(column_id, new_column_id, card_id, new_order)
   
   async def delete_card(self, column_id: int, card_id: int):
     exist_card = await self.repository.get_card_by_id(card_id, column_id)

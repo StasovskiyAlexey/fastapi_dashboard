@@ -28,3 +28,5 @@ function App() {
 }
 
 export default App
+
+// TODO Сделать возможность перетаскивать карточки по колонкам
